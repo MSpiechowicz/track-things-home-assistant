@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Home Assistant (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [minimum, latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            constraints/minimum.txt
+      - name: Install compatible test dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          if [[ "${{ matrix.target }}" == "minimum" ]]; then
+            python -m pip install -e ".[test]" -c constraints/minimum.txt
+          else
+            python -m pip install --upgrade -e ".[test]"
+          fi
+          python -m pip check
+      - name: Report tested versions
+        run: python -m pip show homeassistant pytest-homeassistant-custom-component
+      - name: Lint
+        run: python -m ruff check .
+      - name: Check formatting
+        run: python -m ruff format --check .
+      - name: Check physical file sizes
+        run: python scripts/check_file_sizes.py
+      - name: Test integration lifecycle and source quality
+        run: python -m pytest -q
