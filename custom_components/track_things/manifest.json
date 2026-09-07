@@ -1,0 +1,11 @@
+{
+  "domain": "track_things",
+  "name": "Track Things",
+  "codeowners": ["@MSpiechowicz"],
+  "documentation": "https://github.com/MSpiechowicz/track-things-home-assistant",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/MSpiechowicz/track-things-home-assistant/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

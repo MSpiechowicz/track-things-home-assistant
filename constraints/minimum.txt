@@ -1,0 +1,3 @@
+# The harness pins Home Assistant and its test dependencies as a compatible set.
+homeassistant==2026.9.0
+pytest-homeassistant-custom-component==0.13.363
