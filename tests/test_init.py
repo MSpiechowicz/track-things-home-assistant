@@ -1,5 +1,9 @@
 """Exercise the scaffold through Home Assistant's actual loader and lifecycle."""
 
+import tomllib
+from pathlib import Path
+
+import pytest
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.loader import async_get_integration
@@ -9,13 +13,20 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 from custom_components.track_things.const import DOMAIN
 
 
-async def test_yaml_setup(hass: HomeAssistant) -> None:
+@pytest.fixture
+def package_version() -> str:
+    """Read the current package version outside the running event loop."""
+    root = Path(__file__).resolve().parents[1]
+    return tomllib.loads((root / "pyproject.toml").read_text())["project"]["version"]
+
+
+async def test_yaml_setup(hass: HomeAssistant, package_version: str) -> None:
     """The documented empty YAML loads the real custom component."""
     assert await async_setup_component(hass, DOMAIN, {DOMAIN: {}})
     assert DOMAIN in hass.config.components
     integration = await async_get_integration(hass, DOMAIN)
     assert not integration.is_built_in
-    assert integration.version == "0.1.0"
+    assert integration.version == package_version
     assert DOMAIN not in hass.services.async_services()
     assert hass.states.async_entity_ids(DOMAIN) == []
 

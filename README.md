@@ -98,6 +98,45 @@ Assist. Full dialogue will use Assist. Backend authentication, date filtering,
 schema guards, and idempotency are prerequisite tickets; no backend changes are
 included in this scaffold.
 
+## Automatic versioning
+
+After both CI jobs pass on a push to `main`, the version job reads Conventional
+Commits since the highest reachable stable `vX.Y.Z` tag:
+
+- `feat:` increments minor.
+- `fix:`, `perf:`, and `revert:` increment patch.
+- `!` in a Conventional Commit header or a `BREAKING CHANGE:` /
+  `BREAKING-CHANGE:` footer increments major, including before version 1.0.
+- Documentation, tests, chores, refactors, and unrecognized subjects do not bump
+  unless they declare a breaking change. The highest increment wins.
+
+The job updates `project.version` in `pyproject.toml` and `version` in the Home
+Assistant manifest together, commits as `github-actions[bot]`, and atomically
+pushes the commit and annotated `vX.Y.Z` tag. Before the first tag it uses the
+stored `0.1.0` as the base and examines all commits; the initial `feat:` therefore
+produces `0.2.0`. Keep both files synchronized and do not bump them manually.
+
+Preview locally without modifying files:
+
+```sh
+python scripts/semantic_version.py
+```
+
+PRs and branch builds only preview. When squash-merging, use a Conventional
+Commit PR title (for example `feat: add calendar support`) so the resulting main
+commit declares the intended change. Merge commits can retain the conventional
+subjects of the individual commits.
+
+Only the version job has `contents: write`. It uses the built-in `GITHUB_TOKEN`,
+which does not trigger another push workflow; the release commit also contains
+`[skip ci]`. Serialized jobs skip stale tested commits and never force-push. An
+atomic push fails if main changes or a tag conflicts, leaving the remote unchanged.
+A retry after a successful release finds nothing new to bump.
+
+Repository/organization rules must permit the Actions token to push the version
+commit to `main` and create tags; this workflow does not bypass branch protection.
+No PyPI upload or GitHub Release publication is included.
+
 ## License
 
 GPL-3.0-only; see [LICENSE](LICENSE).

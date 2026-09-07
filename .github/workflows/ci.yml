@@ -20,6 +20,8 @@ jobs:
         target: [minimum, latest]
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v7
         with:
           python-version: "3.14"
@@ -47,3 +49,51 @@ jobs:
         run: python scripts/check_file_sizes.py
       - name: Test integration lifecycle and source quality
         run: python -m pytest -q
+      - name: Preview semantic version
+        run: python scripts/semantic_version.py
+
+  version:
+    name: Bump version on main
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: semantic-version-main
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+      - name: Check that the tested commit is still main
+        id: head
+        shell: bash
+        run: |
+          git fetch origin main --tags
+          if [[ "$(git rev-parse origin/main)" == "$GITHUB_SHA" ]]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Main advanced; its own CI run will calculate the next version."
+            echo "current=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Bump Python and integration versions
+        id: bump
+        if: steps.head.outputs.current == 'true'
+        run: python scripts/semantic_version.py --apply --github-output "$GITHUB_OUTPUT"
+      - name: Commit and tag atomically
+        if: steps.bump.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.bump.outputs.version }}
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml custom_components/track_things/manifest.json
+          git commit -m "chore(release): v${VERSION} [skip ci]"
+          git tag -a "v${VERSION}" -m "Release v${VERSION}"
+          git push --atomic origin HEAD:refs/heads/main "refs/tags/v${VERSION}"
