@@ -38,7 +38,8 @@ No Gemini agent, API key, subscription, or model call is needed for this path.
    frontend; if metadata changed, answer the new questions and confirm again.
 
 The sole eligible subject is automatically selected from tracker assignments.
-Multiple eligible subjects are enumerated; the speaker's identity never selects
+Configure [language-specific aliases and an explicit default for “me”](VOICE_OPTIONS.md)
+in the integration options. Multiple eligible subjects are enumerated; the speaker's identity never selects
 one. Choice questions enumerate valid labels, booleans enumerate yes/no, and
 conditional hidden fields are omitted. Defaults require an explicit
 `use defaults` / `użyj domyślnych` command; they cannot confirm a write.

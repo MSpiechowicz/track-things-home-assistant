@@ -81,15 +81,37 @@
         "title": "Wybierz trackery",
         "description": "Wybierz trackery do kalendarza. Aktywne trackery ręczne będą też dostępne do wpisów głosowych.",
         "data": {
-          "tracker_ids": "Trackery"
+          "tracker_ids": "Trackery",
+          "configure_voice": "Konfiguruj aliasy i domyślną osobę"
+        }
+      },
+      "voice": {
+        "title": "Nazwy dla rozmów",
+        "description": "Wybierz język i zasób, aby edytować aliasy. „—” zapisuje tylko domyślną osobę. ⚠ oznacza usunięty zasób: usuń jego aliasy lub wybierz aktualną osobę. Domyślna osoba jest używana tylko dla „mnie”, gdy ma przypisanie do trackera.",
+        "data": {
+          "voice_default_subject": "Domyślna osoba dla „mnie”",
+          "language": "Język",
+          "target": "Zasób do edycji"
+        }
+      },
+      "alias": {
+        "title": "Aliasy",
+        "description": "Zasób: {resource}. Wpisz jeden alias w wierszu (do 30, po 100 znaków). Puste pole usuwa aliasy dla wybranego języka. Powtórz konfigurację dla innych zasobów. Wspólne aliasy wymagają doprecyzowania.",
+        "data": {
+          "aliases": "Aliasy"
         }
       }
     },
     "error": {
-      "invalid_tracker": "Wybierz trackery z tego obszaru roboczego."
+      "invalid_tracker": "Wybierz trackery z tego obszaru roboczego.",
+      "invalid_subject": "Wybierz aktualną osobę lub „—”.",
+      "invalid_reference": "Wybierz aktualny zasób lub usuń nieaktualne aliasy.",
+      "invalid_alias": "Użyj do 30 aliasów, każdy do 100 znaków.",
+      "voice_unavailable": "Przywróć połączenie i spróbuj ponownie."
     },
     "abort": {
-      "not_loaded": "Najpierw przywróć połączenie integracji."
+      "not_loaded": "Najpierw przywróć połączenie integracji.",
+      "voice_unavailable": "Przywróć połączenie i spróbuj ponownie."
     }
   }
 }

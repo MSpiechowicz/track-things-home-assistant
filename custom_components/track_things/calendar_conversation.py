@@ -7,8 +7,9 @@ from homeassistant.exceptions import HomeAssistantError
 
 from .conversation_contract import Clarification, Proposal
 from .conversation_language import SENTENCES
-from .conversation_values import resolve
+from .conversation_values import normalized, resolve
 from .daily_calendar import async_daily_records
+from .voice_options import CONF_DEFAULT_SUBJECT, ME, alias_mapping, target_key
 
 MESSAGES = {
     "en": {
@@ -99,6 +100,27 @@ class CalendarConversation:
             if item["workspaceId"] == self.agent.entry.data["workspace_id"]
         }
 
+    def _resolve(self, text, kind, resources, language, tracker_id=None):
+        scope = f"{kind}s"
+        options = self.agent.entry.options
+        if kind == "subject" and normalized(text) in ME[language]:
+            default = options.get(CONF_DEFAULT_SUBJECT)
+            coordinator = self.agent.entry.runtime_data.coordinator
+            subject = coordinator.store.snapshot.subjects.get(default)
+            trackers = coordinator.calendar_trackers
+            if tracker_id:
+                trackers = {key: item for key, item in trackers.items() if key == tracker_id}
+            if (
+                default not in resources
+                or not subject
+                or subject["archivedAt"] is not None
+                or not any(default in item["subjectIds"] for item in trackers.values())
+            ):
+                raise Clarification("default_subject_unavailable")
+            return default
+        aliases = alias_mapping(options, {target_key(scope, key) for key in resources})
+        return resolve(text, resources, aliases.get(f"{language}:{scope}", {}))
+
     async def start(self, key, proposal, language):
         self.sessions[key] = CalendarSession(
             proposal, self.clock() + 300, selection=self._selection()
@@ -134,7 +156,9 @@ class CalendarConversation:
             resources = self._resources(session.pending)
             resources = {key: resources[key] for key in session.candidates if key in resources}
             try:
-                chosen = resolve(text, resources)
+                chosen = self._resolve(
+                    text, session.pending, resources, language, session.filters.get("tracker")
+                )
             except Clarification:
                 return session.last_speech, True
             session.filters[session.pending] = chosen
@@ -151,7 +175,9 @@ class CalendarConversation:
                 continue
             resources = self._resources(kind)
             try:
-                session.filters[kind] = resolve(name, resources)
+                session.filters[kind] = self._resolve(
+                    name, kind, resources, language, session.filters.get("tracker")
+                )
             except Clarification as error:
                 session.pending = kind
                 session.candidates = error.candidates or tuple(resources)

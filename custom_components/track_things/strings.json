@@ -81,15 +81,37 @@
         "title": "Select trackers",
         "description": "Choose calendar trackers. Active manual trackers will also be eligible for voice entries.",
         "data": {
-          "tracker_ids": "Trackers"
+          "tracker_ids": "Trackers",
+          "configure_voice": "Configure voice aliases and default subject"
+        }
+      },
+      "voice": {
+        "title": "Conversation names",
+        "description": "Choose a language and resource to edit aliases. “—” saves only the default subject. ⚠ marks an unavailable reference: clear its aliases or choose a current subject. The default is used only for “me” when assigned to the tracker.",
+        "data": {
+          "voice_default_subject": "Default subject for “me”",
+          "language": "Language",
+          "target": "Resource to edit"
+        }
+      },
+      "alias": {
+        "title": "Aliases",
+        "description": "Resource: {resource}. Enter one alias per line (up to 30, each 100 characters). Leave empty to remove aliases for this language. Repeat configuration for other resources. Shared aliases require clarification.",
+        "data": {
+          "aliases": "Aliases"
         }
       }
     },
     "error": {
-      "invalid_tracker": "Choose trackers from this workspace."
+      "invalid_tracker": "Choose trackers from this workspace.",
+      "invalid_subject": "Choose a current subject or “—”.",
+      "invalid_reference": "Choose a current resource or clear unavailable aliases.",
+      "invalid_alias": "Use up to 30 aliases, each at most 100 characters.",
+      "voice_unavailable": "Restore connectivity and try again."
     },
     "abort": {
-      "not_loaded": "Restore the integration connection first."
+      "not_loaded": "Restore the integration connection first.",
+      "voice_unavailable": "Restore connectivity and try again."
     }
   }
 }

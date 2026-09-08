@@ -28,6 +28,7 @@ from .conversation_responses import MESSAGES, review_speech
 from .dialogue import DraftError, DraftMetadata, DraftPatch, DraftStore, SubmissionIntent
 from .schema import EntryValueError
 from .voice_creation import PendingWrite, VoiceEntryWriter
+from .voice_options import alias_mapping, catalog, current_metadata, default_subject
 from .voice_responses import VOICE_MESSAGES
 
 # Optional callback seam for alternate runtimes. Production uses VoiceEntryWriter.
@@ -168,6 +169,8 @@ class TrackThingsConversation(ConversationEntity):
                 calendar = calendar_proposal(text.removeprefix("/"), context)
                 if calendar is not None:
                     return await self.calendar.start(key, calendar, language)
+            live_metadata = await current_metadata(self.entry)
+            aliases = alias_mapping(self.entry.options, catalog(live_metadata))
             if session:
                 result = self.drafts.inspect(session.draft_id)
                 view = self.drafts.view(session.draft_id)
@@ -187,11 +190,23 @@ class TrackThingsConversation(ConversationEntity):
                     tracker_id=view.tracker_id,
                     descriptor=descriptor,
                     values=view.values,
+                    aliases=aliases,
+                    default_subject_id=default_subject(
+                        self.entry.options,
+                        live_metadata,
+                        view.tracker_id
+                        if view.tracker_id in self.entry.runtime_data.coordinator.voice_trackers
+                        else None,
+                    ),
                 )
             else:
                 metadata = await self._metadata()
                 context = AdapterContext(
-                    metadata, language, dt_util.utcnow(), self.hass.config.time_zone
+                    metadata,
+                    language,
+                    dt_util.utcnow(),
+                    self.hass.config.time_zone,
+                    aliases=aliases,
                 )
             proposal = self._adapters[language].parse(text, context)
             if not isinstance(proposal, Proposal) or not isinstance(proposal.patch, DraftPatch):
@@ -242,9 +257,21 @@ class TrackThingsConversation(ConversationEntity):
             speech = self._prompt(session, language)
             session.last_speech = speech
             return speech, True
+        except Clarification as error:
+            if error.code == "ambiguous_name" and error.candidates:
+                if session is None and all(key in metadata.trackers for key in error.candidates):
+                    draft_id = str(uuid4())
+                    self.drafts.start(draft_id, metadata, DraftPatch())
+                    session = self._sessions[key] = Session(draft_id)
+                choices = ", ".join(error.candidates)
+                if session:
+                    session.last_speech = self._prompt(session, language)
+                    return words["recovery"] + " " + choices + ". " + session.last_speech, True
+            if session:
+                return words["recovery"] + " " + session.last_speech, True
+            return words["recovery"] + " " + words["start"], False
         except (
             ApiError,
-            Clarification,
             DraftError,
             EntryValueError,
             ValueError,

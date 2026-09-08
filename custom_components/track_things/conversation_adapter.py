@@ -15,6 +15,7 @@ from .conversation_values import normalized, occurrence, resolve, value
 from .dialogue_models import Descriptor, DraftMetadata, DraftPatch
 from .dialogue_rules import eligible_subjects, eligible_trackers, tracker_schema
 from .schema import normalize_draft_values, validate_entry_values
+from .voice_options import ME
 
 
 @dataclass(frozen=True, repr=False)
@@ -30,6 +31,8 @@ class AdapterContext:
     values: dict[str, Any] = field(default_factory=dict)
     # Language is selected before lookup; tracker/field scopes prevent collisions.
     aliases: dict[str, dict[str, tuple[str, ...]]] = field(default_factory=dict)
+
+    default_subject_id: str | None = None
 
     def names(self, scope):
         return self.aliases.get(f"{self.language}:{scope}", {})
@@ -159,6 +162,10 @@ class QuestionAdapter:
             allowed = set(descriptor.candidates) & set(
                 eligible_subjects(context.metadata, context.tracker_id)
             )
+            if normalized(text) in ME[self.language]:
+                if context.default_subject_id not in allowed:
+                    raise Clarification("default_subject_unavailable", tuple(allowed))
+                return Proposal("patch", DraftPatch(subject_id=context.default_subject_id))
             key = resolve(
                 text,
                 {key: context.metadata.subjects[key].get("name", key) for key in allowed},

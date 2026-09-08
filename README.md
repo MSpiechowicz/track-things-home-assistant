@@ -182,3 +182,6 @@ see [confirmed voice creation](docs/VOICE_CREATION.md).
 GPL-3.0-only; see [LICENSE](LICENSE).
 
 Name-based recording and voice-adapter discovery are documented in the [name-based action guide](docs/NAME_BASED_ACTIONS.md).
+
+Configure [voice aliases and the default subject for “me”](docs/VOICE_OPTIONS.md)
+from the integration options.
