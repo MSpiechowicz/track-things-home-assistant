@@ -26,3 +26,5 @@ def login_responses(http, *, user=None, workspaces=None, credentials=None):
 def setup_responses(http):
     http.respond(USER)
     http.respond(WORKSPACE)
+    http.respond({"items": [], "nextCursor": None})
+    http.respond({"items": [], "nextCursor": None})

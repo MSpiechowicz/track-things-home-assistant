@@ -4,7 +4,8 @@ Custom integration for [Track Things](https://track-things.com).
 The repository provides loading/unloading, an asynchronous API client, pure
 dynamic-field validation, pure calendar mapping, a Home Assistant test harness,
 source-quality checks, and CI. Account setup, workspace selection, and reauthentication
-are available in the integration UI. Calendar entities and voice commands are
+are available in the integration UI, along with tracker selection and five-minute
+metadata discovery. See the [metadata guide](docs/METADATA.md). Calendar entities and voice commands are
 planned features and are **not available yet**.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the

@@ -41,5 +41,22 @@
       "no_workspaces": "This account has no accessible workspaces.",
       "reauth_successful": "Authentication was successful."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Select trackers",
+        "description": "Choose calendar trackers. Active manual trackers will also be eligible for voice entries.",
+        "data": {
+          "tracker_ids": "Trackers"
+        }
+      }
+    },
+    "error": {
+      "invalid_tracker": "Choose trackers from this workspace."
+    },
+    "abort": {
+      "not_loaded": "Restore the integration connection first."
+    }
   }
 }

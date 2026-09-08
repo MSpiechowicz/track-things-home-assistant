@@ -11,9 +11,10 @@ from .api_decode import decode_session
 from .api_errors import ApiError, AuthenticationError, NotFoundError, PermissionDeniedError
 from .auth import AuthenticatedApi, normalize_backend_url, session_data
 from .const import DOMAIN
+from .coordinator import MetadataCoordinator, TrackThingsRuntime
 
 CONFIG_SCHEMA = vol.Schema({vol.Optional(DOMAIN): vol.Schema({})}, extra=vol.ALLOW_EXTRA)
-type TrackThingsConfigEntry = ConfigEntry[AuthenticatedApi]
+type TrackThingsConfigEntry = ConfigEntry[TrackThingsRuntime]
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -43,11 +44,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: TrackThingsConfigEntry) 
     except ApiError as err:
         client.close()
         raise ConfigEntryNotReady("Track Things is temporarily unavailable") from err
-    entry.runtime_data = client
+    coordinator = MetadataCoordinator(hass, entry, client)
+    try:
+        await coordinator.async_config_entry_first_refresh()
+    except BaseException:
+        client.close()
+        await coordinator.async_shutdown()
+        raise
+    entry.runtime_data = TrackThingsRuntime(client, coordinator)
+    # Keep discovery polling before entity platforms are installed.
+    entry.async_on_unload(coordinator.async_add_listener(lambda: None))
+    entry.async_on_unload(entry.add_update_listener(async_options_updated))
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: TrackThingsConfigEntry) -> bool:
     """Disable the client without closing HA's shared session or retaining tasks."""
-    entry.runtime_data.close()
+    await entry.runtime_data.coordinator.async_shutdown()
+    entry.runtime_data.api.close()
     return True
+
+
+async def async_options_updated(hass: HomeAssistant, entry: TrackThingsConfigEntry) -> None:
+    """Notify cached consumers when tracker selection changes without reloading."""
+    entry.runtime_data.coordinator.async_update_listeners()

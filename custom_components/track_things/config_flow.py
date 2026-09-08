@@ -4,7 +4,8 @@ import json
 from typing import Any
 
 import voluptuous as vol
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult
+from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import (
     TextSelector,
@@ -17,6 +18,7 @@ from .api_errors import ApiError, AuthenticationError
 from .api_models import User, Workspace
 from .auth import AuthenticatedApi, normalize_backend_url, session_data
 from .const import DOMAIN
+from .options_flow import TrackerOptionsFlow
 
 LOGIN_FIELDS = {
     vol.Required("identifier"): str,
@@ -28,6 +30,11 @@ class TrackThingsConfigFlow(ConfigFlow, domain=DOMAIN):
     """Configure a backend/account/workspace instance without retaining passwords."""
 
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> TrackerOptionsFlow:
+        return TrackerOptionsFlow()
 
     def __init__(self) -> None:
         self._data: dict[str, Any] = {}

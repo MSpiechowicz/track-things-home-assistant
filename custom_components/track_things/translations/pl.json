@@ -41,5 +41,22 @@
       "no_workspaces": "To konto nie ma dostępnych przestrzeni roboczych.",
       "reauth_successful": "Uwierzytelnienie powiodło się."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Wybierz trackery",
+        "description": "Wybierz trackery do kalendarza. Aktywne trackery ręczne będą też dostępne do wpisów głosowych.",
+        "data": {
+          "tracker_ids": "Trackery"
+        }
+      }
+    },
+    "error": {
+      "invalid_tracker": "Wybierz trackery z tego obszaru roboczego."
+    },
+    "abort": {
+      "not_loaded": "Najpierw przywróć połączenie integracji."
+    }
   }
 }
