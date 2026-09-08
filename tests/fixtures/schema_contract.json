@@ -1,0 +1,3763 @@
+[
+  {
+    "name": "text-valid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": ""
+    },
+    "error": null
+  },
+  {
+    "name": "text-valid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "hello"
+    },
+    "error": null
+  },
+  {
+    "name": "text-invalid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": false
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "text-invalid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 0
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "text-invalid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": []
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "text-invalid-3",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": {}
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "text-invalid-4",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "text-required-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "values": {},
+    "error": "invalid_request"
+  },
+  {
+    "name": "text-optional-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": false
+        }
+      ]
+    },
+    "values": {},
+    "error": null
+  },
+  {
+    "name": "text-optional-null",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": false
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "textarea-valid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": ""
+    },
+    "error": null
+  },
+  {
+    "name": "textarea-valid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "line\nline"
+    },
+    "error": null
+  },
+  {
+    "name": "textarea-invalid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": false
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "textarea-invalid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 0
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "textarea-invalid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": []
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "textarea-invalid-3",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "textarea-required-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "values": {},
+    "error": "invalid_request"
+  },
+  {
+    "name": "textarea-optional-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "values": {},
+    "error": null
+  },
+  {
+    "name": "textarea-optional-null",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "number-valid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 0
+    },
+    "error": null
+  },
+  {
+    "name": "number-valid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": -5
+    },
+    "error": null
+  },
+  {
+    "name": "number-valid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1.25
+    },
+    "error": null
+  },
+  {
+    "name": "number-invalid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": false
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "number-invalid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": true
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "number-invalid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "number-invalid-3",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": []
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "number-invalid-4",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": {}
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "number-invalid-5",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "number-required-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": true
+        }
+      ]
+    },
+    "values": {},
+    "error": "invalid_request"
+  },
+  {
+    "name": "number-optional-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    "values": {},
+    "error": null
+  },
+  {
+    "name": "number-optional-null",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-valid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 0
+    },
+    "error": null
+  },
+  {
+    "name": "slider-valid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1.25
+    },
+    "error": null
+  },
+  {
+    "name": "slider-invalid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": false
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-invalid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": true
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-invalid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-invalid-3",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": []
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-invalid-4",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": {}
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-invalid-5",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-required-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": true
+        }
+      ]
+    },
+    "values": {},
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-optional-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": false
+        }
+      ]
+    },
+    "values": {},
+    "error": null
+  },
+  {
+    "name": "slider-optional-null",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "required": false
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "boolean-valid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": false
+    },
+    "error": null
+  },
+  {
+    "name": "boolean-valid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": true
+    },
+    "error": null
+  },
+  {
+    "name": "boolean-invalid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 0
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "boolean-invalid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "boolean-invalid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "false"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "boolean-invalid-3",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": []
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "boolean-invalid-4",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "boolean-required-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": true
+        }
+      ]
+    },
+    "values": {},
+    "error": "invalid_request"
+  },
+  {
+    "name": "boolean-optional-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    "values": {},
+    "error": null
+  },
+  {
+    "name": "boolean-optional-null",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-valid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2024-02-29"
+    },
+    "error": null
+  },
+  {
+    "name": "date-valid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2026-09-08"
+    },
+    "error": null
+  },
+  {
+    "name": "date-valid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "0000-02-29"
+    },
+    "error": null
+  },
+  {
+    "name": "date-valid-3",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "0099-12-31"
+    },
+    "error": null
+  },
+  {
+    "name": "date-invalid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2023-02-29"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2026-04-31"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2026-00-01"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-3",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2026-13-01"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-4",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2026-01-00"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-5",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2026-01-32"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-6",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2026-9-08"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-7",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2026-09-08T00:00:00Z"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-8",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "２０２６-09-08"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-9",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "2026-09-08\n"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-10",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 0
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-invalid-11",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-required-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    "values": {},
+    "error": "invalid_request"
+  },
+  {
+    "name": "date-optional-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": false
+        }
+      ]
+    },
+    "values": {},
+    "error": null
+  },
+  {
+    "name": "date-optional-null",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "date",
+          "required": false
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "select-valid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "option-a"
+    },
+    "error": null
+  },
+  {
+    "name": "select-invalid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "Option A"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "select-invalid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "missing"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "select-invalid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": []
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "select-invalid-3",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": false
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "select-invalid-4",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "select-required-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {},
+    "error": "invalid_request"
+  },
+  {
+    "name": "select-optional-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "required": false,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {},
+    "error": null
+  },
+  {
+    "name": "select-optional-null",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "required": false,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-valid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": []
+    },
+    "error": null
+  },
+  {
+    "name": "multiselect-valid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": [
+        "option-a"
+      ]
+    },
+    "error": null
+  },
+  {
+    "name": "multiselect-valid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": [
+        "option-a",
+        "option-b"
+      ]
+    },
+    "error": null
+  },
+  {
+    "name": "multiselect-invalid-0",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": [
+        "option-a",
+        "option-a"
+      ]
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-invalid-1",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": [
+        "missing"
+      ]
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-invalid-2",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": [
+        "Option A"
+      ]
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-invalid-3",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": [
+        "option-a",
+        false
+      ]
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-invalid-4",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": {}
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-invalid-5",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": "option-a"
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-invalid-6",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": [
+        [
+          1
+        ]
+      ]
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-invalid-7",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-required-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": true,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {},
+    "error": "invalid_request"
+  },
+  {
+    "name": "multiselect-optional-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": false,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {},
+    "error": null
+  },
+  {
+    "name": "multiselect-optional-null",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "multiselect",
+          "required": false,
+          "options": [
+            {
+              "id": "option-a",
+              "label": "Option A"
+            },
+            {
+              "id": "option-b",
+              "label": "Option B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {
+      "detail_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-min",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "min": 1
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 0
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-max",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "max": 3
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 4
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-min-inclusive",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "min": 1
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1
+    },
+    "error": null
+  },
+  {
+    "name": "slider-max-inclusive",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "max": 3
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 3
+    },
+    "error": null
+  },
+  {
+    "name": "slider-step-offset",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "min": 1,
+            "max": 9,
+            "step": 2
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 3
+    },
+    "error": null
+  },
+  {
+    "name": "slider-step-misaligned",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "min": 1,
+            "step": 2
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 2
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-step-zero-base",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "step": 2
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 2
+    },
+    "error": null
+  },
+  {
+    "name": "slider-step-negative-value",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "step": 2
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": -2
+    },
+    "error": null
+  },
+  {
+    "name": "slider-decimal",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "min": 0.1,
+            "step": 0.1
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 0.3
+    },
+    "error": null
+  },
+  {
+    "name": "slider-tolerance",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "step": 1
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1.0000000005
+    },
+    "error": null
+  },
+  {
+    "name": "slider-outside-tolerance",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "step": 1
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1.000000002
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-bad-min",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "min": "1"
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 2
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-bool-max",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "max": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 0
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "slider-bad-step",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "step": 0
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1
+    },
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "slider-negative-step",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "step": -1
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1
+    },
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "slider-string-step",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "step": "1"
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1
+    },
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "slider-bool-step",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": {
+            "step": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1
+    },
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "slider-no-rules",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": null
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 500
+    },
+    "error": null
+  },
+  {
+    "name": "slider-array-rules",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "slider",
+          "validation": []
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 500
+    },
+    "error": null
+  },
+  {
+    "name": "number-ignores-bounds",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "number",
+          "validation": {
+            "min": 10,
+            "max": 20,
+            "step": 2
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": 1
+    },
+    "error": null
+  },
+  {
+    "name": "text-ignores-length",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "validation": {
+            "minLength": 10
+          }
+        }
+      ]
+    },
+    "values": {
+      "detail_key": ""
+    },
+    "error": null
+  },
+  {
+    "name": "unknown-key",
+    "schema": {
+      "fields": []
+    },
+    "values": {
+      "extra": 1
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "backend-empty-unknown-key",
+    "schema": {
+      "fields": []
+    },
+    "values": {
+      "": 1
+    },
+    "error": null
+  },
+  {
+    "name": "default-not-inserted",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": false
+        }
+      ]
+    },
+    "values": {},
+    "error": "invalid_request"
+  },
+  {
+    "name": "chain-inactive",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "transport_key": "car"
+    },
+    "error": null
+  },
+  {
+    "name": "chain-false",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "transport_key": "train",
+      "delay_key": false
+    },
+    "error": null
+  },
+  {
+    "name": "chain-zero",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "transport_key": "train",
+      "delay_key": true,
+      "minutes_key": 0
+    },
+    "error": null
+  },
+  {
+    "name": "chain-missing",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "transport_key": "train",
+      "delay_key": true
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "chain-hidden",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "transport_key": "car",
+      "delay_key": true
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "chain-hidden-null",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "transport_key": "car",
+      "delay_key": null
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "chain-hidden-descendant",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "transport_key": "car",
+      "minutes_key": 0
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "chain-invalid-controller",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {
+      "transport_key": "train",
+      "delay_key": 1,
+      "minutes_key": 0
+    },
+    "error": "invalid_request"
+  },
+  {
+    "name": "schema-null",
+    "schema": null,
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-array",
+    "schema": [],
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-missing-fields",
+    "schema": {},
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-fields-object",
+    "schema": {
+      "fields": {}
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-field-null",
+    "schema": {
+      "fields": [
+        null
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-empty-id",
+    "schema": {
+      "fields": [
+        {
+          "id": "",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text"
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-whitespace-label",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "﻿",
+          "type": "text"
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-unknown-type",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "file"
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-type-array",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": []
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-required-number",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "required": 1
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-negative-order",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "order": -1
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-bool-order",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "order": true
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-fraction-order",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "order": 0.5
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-null-condition",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text",
+          "visibleWhen": null
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-options-missing",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "options": null
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-options-object",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "options": {}
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-options-null-item",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "options": [
+            null
+          ]
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-options-empty-label",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "options": [
+            {
+              "id": "a",
+              "label": ""
+            }
+          ]
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-options-duplicate",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "select",
+          "options": [
+            {
+              "id": "a",
+              "label": "A"
+            },
+            {
+              "id": "a",
+              "label": "B"
+            }
+          ]
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-duplicate-id",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text"
+        },
+        {
+          "id": "field-id",
+          "key": "second",
+          "label": "Detail label",
+          "type": "text"
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-duplicate-key",
+    "schema": {
+      "fields": [
+        {
+          "id": "field-id",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text"
+        },
+        {
+          "id": "second",
+          "key": "detail_key",
+          "label": "Detail label",
+          "type": "text"
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-optional-controller",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": false,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-wrong-controller-type",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "text",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-unknown-controller",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "nope",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-forward-controller",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "minutes-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-self-controller",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-unknown-option",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "nope"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-wrong-select-value",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": true
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-wrong-bool-value",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": 1
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-bad-operator",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "contains",
+            "value": true
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  },
+  {
+    "name": "schema-extra-property",
+    "schema": {
+      "version": 1,
+      "fields": [
+        {
+          "id": "transport-id",
+          "key": "transport_key",
+          "label": "Transport",
+          "type": "select",
+          "required": true,
+          "order": 9,
+          "options": [
+            {
+              "id": "train",
+              "label": "Train"
+            },
+            {
+              "id": "car",
+              "label": "Car"
+            }
+          ]
+        },
+        {
+          "id": "delay-id",
+          "key": "delay_key",
+          "label": "Was there a delay?",
+          "type": "boolean",
+          "required": true,
+          "order": 0,
+          "visibleWhen": {
+            "fieldId": "transport-id",
+            "operator": "equals",
+            "value": "train"
+          }
+        },
+        {
+          "id": "minutes-id",
+          "key": "minutes_key",
+          "label": "Delay minutes",
+          "type": "number",
+          "required": true,
+          "visibleWhen": {
+            "fieldId": "delay-id",
+            "operator": "equals",
+            "value": true,
+            "extra": true
+          }
+        }
+      ]
+    },
+    "values": {},
+    "error": "tracker_schema_unavailable"
+  }
+]
