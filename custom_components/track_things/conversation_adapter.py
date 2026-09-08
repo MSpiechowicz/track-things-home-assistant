@@ -7,6 +7,7 @@ from zoneinfo import ZoneInfo
 
 from hassil import Intents, recognize_all
 
+from .calendar_intents import calendar_proposal
 from .conversation_contract import Clarification, Proposal
 from .conversation_language import SENTENCES, WORDS
 from .conversation_questions import default_patch
@@ -72,6 +73,9 @@ class QuestionAdapter:
             and descriptor.definition["type"] in ("text", "textarea")
         ):
             return self._answer(text, context)
+        calendar = calendar_proposal(text.removeprefix("/"), context)
+        if calendar is not None:
+            return calendar
         matches = list(recognize_all(text.removeprefix("/"), self.intents))
         if not matches:
             if descriptor:

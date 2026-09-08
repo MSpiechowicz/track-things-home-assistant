@@ -16,8 +16,10 @@ values with a stable request ID across its retry; real-device verification remai
 An offline [guided-question adapter](docs/CONVERSATION_ADAPTER.md) supports English,
 Polish, German, and French, including explicit default-detail proposals.
 A selectable [Track Things Assist agent](docs/ASSIST_CONVERSATION.md) guides
-those drafts through questions and review. Saving and calendar conversation
-dispatch are not available yet. Live voice/device verification remains pending.
+those drafts through questions, review and confirmed saving.
+[Calendar questions](docs/CALENDAR_CONVERSATION.md) support localized dates,
+tracker/subject clarification and isolated five-entry pagination.
+Live voice/device verification remains pending.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the
 [project board](https://github.com/users/MSpiechowicz/projects/4).
