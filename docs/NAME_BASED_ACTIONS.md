@@ -6,7 +6,7 @@ names; no backend UUID lookup is required. Names ignore case and repeated spaces
 They are matched exactly, never fuzzily. Duplicate names require clarification;
 use a unique identifier from discovery to disambiguate, or rename the resource.
 
-For a tracker with one field, enter its value directly in the Value editor:
+For numeric fields, use the Number input. For other types, enter a value in the Value editor:
 `3` for a number, `true` for a boolean, or a quoted string for text. This editor
 accepts YAML scalars; an object is not required.
 
@@ -20,8 +20,13 @@ data:
   value: 3
 ```
 
-`field` is optional only for a single-field tracker. `occurred_at` defaults to
-now, including timezone. For multiple fields, replace `field` and `value` with:
+`field` is optional when submitting a single value to a single-field tracker.
+Values may be omitted if no visible fields are required. Required fields are never
+invented or silently defaulted. `occurred_at` defaults to now, including timezone.
+Use the Date picker for a specific day; YAML and voice adapters can send
+`date: tomorrow`, `date: today`, or `date: yesterday`. Relative dates use the
+Home Assistant timezone and resolve to local midnight. Do not combine `date`
+with `occurred_at`. For retries replace `date` with the returned `occurred_at`. For multiple fields, replace `field` and `value` with:
 
 ```yaml
 values:
@@ -44,7 +49,8 @@ resolved to IDs internally. Existing `create_entry` calls remain unchanged.
    match or silently invent/default a value.
 3. Submit typed values (numbers as numbers, booleans as booleans). For speech such
    as “three”, the speech/intent adapter supplies numeric `3`. The action does
-   not coerce arbitrary strings or parse natural-language dates.
+   not coerce arbitrary strings. It supports the three relative-day words above,
+   not unrestricted natural-language dates.
 4. Use `summary` only after a successful response to confirm the recording.
    Validation failures do not write an entry. The authoritative writer checks
    current assignments, schema, selection and backend permissions again.
@@ -57,3 +63,20 @@ These actions provide the name-based tool contract. They do not automatically
 register an HA Assist intent or expose a Google Nest command. A voice adapter
 must call discovery and recording and handle follow-up questions. Google Home
 compatibility still requires its separate voice bridge and end-to-end testing.
+
+## Example: migraine tomorrow
+
+```yaml
+action: track_things.record_entry
+data:
+  config_entry_id: YOUR_SELECTED_ACCOUNT_INSTANCE
+  tracker: Migraine
+  subject: Maciej
+  date: tomorrow
+  field: Pain
+  number: 4
+```
+
+Use the exact field label from your tracker. Other required fields still need
+values; for multiple fields use `values` instead of `field` and `number`.
+This is an action payload for a voice adapter, not a registered spoken command.

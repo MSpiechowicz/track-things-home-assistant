@@ -133,6 +133,18 @@ record_entry:
       required: true
       selector:
         text:
+    date:
+      name: Date
+      description: Optional calendar date. YAML and voice adapters also accept today, tomorrow or yesterday in the Home Assistant timezone. Defaults to now.
+      selector:
+        date:
+    number:
+      name: Number
+      description: A numeric value, such as pain 4. Use instead of Value for numeric fields.
+      selector:
+        number:
+          mode: box
+          step: any
     field:
       name: Field
       description: Field label, such as Wellbeing. Optional when the tracker has only one field.

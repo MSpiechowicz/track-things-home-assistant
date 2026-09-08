@@ -8,7 +8,7 @@ from homeassistant.exceptions import ServiceValidationError
 
 from custom_components.track_things.named_actions import named_values, record_entry, resolve
 
-FIELDS = [{"key": "wellbeing", "label": "Wellbeing", "type": "number"}]
+FIELDS = [{"id": "f", "key": "wellbeing", "label": "Wellbeing", "type": "number"}]
 
 
 def test_names_normalized():
@@ -54,7 +54,7 @@ def test_choices_resolve_labels():
         {"value": 3, "values": {}},
         {"values": {"Wellbeing": 3, "wellbeing": 4}},
         {"field": "unknown", "value": 3},
-        {},
+        {"field": "Wellbeing"},
     ],
 )
 def test_invalid_fields(data):
@@ -182,3 +182,58 @@ async def test_registered_name_action_writes_through_http(hass, config_entry, au
     )
     assert result["entry"] == ENTRY
     assert auth_http.request.call_args.kwargs["json"]["values"] == {"severity": 6}
+
+
+def test_no_values_are_allowed_for_optional_fields():
+    assert named_values(FIELDS, {}) == {}
+    assert named_values([], {}) == {}
+    assert named_values(FIELDS, {"number": 4}) == {"wellbeing": 4}
+
+
+def test_relative_date_uses_ha_timezone(freezer):
+    from custom_components.track_things.named_actions import recording_timestamp
+
+    freezer.move_to("2026-09-08T23:30:00Z")
+    assert recording_timestamp({"date": "tomorrow"}, "Europe/Berlin") == "2026-09-10T00:00:00+02:00"
+    assert (
+        recording_timestamp({"date": "2026-12-01"}, "Europe/Berlin") == "2026-12-01T00:00:00+01:00"
+    )
+
+
+@pytest.mark.parametrize(
+    "data",
+    [
+        {"date": "nonsense"},
+        {"date": "2026-02-30"},
+        {"date": "tomorrow", "occurred_at": "2026-09-08T10:00:00Z"},
+    ],
+)
+def test_invalid_or_conflicting_date(data):
+    from custom_components.track_things.named_actions import recording_timestamp
+
+    with pytest.raises(ServiceValidationError):
+        recording_timestamp(data, "Europe/Berlin")
+
+
+async def test_required_field_error_names_the_field():
+    catalog = {
+        "trackers": [
+            {
+                "id": "t",
+                "name": "Migraine",
+                "subjects": [{"id": "s", "name": "Maciej"}],
+                "fields": [{**FIELDS[0], "required": True}],
+            }
+        ]
+    }
+    writer = AsyncMock()
+    with (
+        patch(
+            "custom_components.track_things.named_actions.recording_options",
+            AsyncMock(return_value=catalog),
+        ),
+        patch("custom_components.track_things.named_actions.async_create_entry", writer),
+        pytest.raises(ServiceValidationError, match="Wellbeing"),
+    ):
+        await record_entry(None, None, {"tracker": "Migraine", "subject": "Maciej"})
+    writer.assert_not_called()
