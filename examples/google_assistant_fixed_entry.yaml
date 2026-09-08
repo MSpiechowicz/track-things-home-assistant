@@ -1,0 +1,9 @@
+# Merge into your existing manual Google Assistant configuration.
+# Preserve its project and authentication settings; review all other exposures.
+google_assistant:
+  project_id: YOUR_EXISTING_PROJECT_ID
+  expose_by_default: false
+  entity_config:
+    script.track_things_fixed_entry:
+      expose: true
+      name: Track Things fixed entry
