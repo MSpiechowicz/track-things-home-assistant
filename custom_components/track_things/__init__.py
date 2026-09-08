@@ -57,13 +57,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: TrackThingsConfigEntry) 
         raise
     entry.runtime_data = TrackThingsRuntime(client, coordinator, CalendarQuery(coordinator))
     entry.async_on_unload(entry.add_update_listener(async_options_updated))
-    await hass.config_entries.async_forward_entry_setups(entry, [Platform.CALENDAR])
+    await hass.config_entries.async_forward_entry_setups(
+        entry, [Platform.CALENDAR, Platform.CONVERSATION]
+    )
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: TrackThingsConfigEntry) -> bool:
     """Disable the client without closing HA's shared session or retaining tasks."""
-    if not await hass.config_entries.async_unload_platforms(entry, [Platform.CALENDAR]):
+    if not await hass.config_entries.async_unload_platforms(
+        entry, [Platform.CALENDAR, Platform.CONVERSATION]
+    ):
         return False
     entry.runtime_data.calendar.invalidate()
     await entry.runtime_data.coordinator.async_shutdown()

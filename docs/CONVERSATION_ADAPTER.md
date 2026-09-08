@@ -18,8 +18,8 @@ neither registers Google tools nor forwards speaker audio.
 authorized metadata snapshot, current descriptor/values, injected clock and
 timezone, and language-scoped aliases. The caller owns sessions and passes
 `Proposal.patch` to `DraftStore`. Each result is a proposal, not permission to
-write. HA conversation entity wiring and the Google experiment remain separate
-work. There is no new selectable voice agent yet.
+write. The [Assist conversation entity](ASSIST_CONVERSATION.md) now supplies
+session wiring and guided review. The Google experiment remains separate work.
 
 All four Track Things languages are supported: English (`en`), Polish (`pl`),
 German (`de`) and French (`fr`). Tracker, subject and detail labels are user data;

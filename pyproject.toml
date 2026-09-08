@@ -15,6 +15,8 @@ license = "GPL-3.0-only"
 test = [
   "homeassistant>=2026.9.0",
   "pytest-homeassistant-custom-component>=0.13.363",
+  "gazetteer-matcher==1.1.0",
+  "home-assistant-intents==2026.8.28",
   "ruff>=0.15,<1",
 ]
 
