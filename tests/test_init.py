@@ -31,6 +31,8 @@ async def test_yaml_setup(hass: HomeAssistant, package_version: str) -> None:
     assert integration.version == package_version
     assert set(hass.services.async_services()[DOMAIN]) == {
         "create_entry",
+        "record_entry",
+        "get_recording_options",
         "get_daily_calendar",
         "refresh",
     }
@@ -69,6 +71,8 @@ async def test_entry_setup_reload_unload(
     assert DOMAIN not in hass.data
     assert set(hass.services.async_services()[DOMAIN]) == {
         "create_entry",
+        "record_entry",
+        "get_recording_options",
         "get_daily_calendar",
         "refresh",
     }

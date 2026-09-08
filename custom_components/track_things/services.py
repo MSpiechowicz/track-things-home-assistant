@@ -19,6 +19,7 @@ from homeassistant.util import dt as dt_util
 from .api_errors import ApiError, AuthenticationError, NotFoundError, PermissionDeniedError
 from .const import DOMAIN
 from .create_entry import CREATE_SCHEMA, async_create_entry
+from .named_actions import RECORD_SCHEMA, record_entry, recording_options
 
 TARGET_SCHEMA = {vol.Required("config_entry_id"): cv.string}
 DAILY_SCHEMA = vol.Schema(
@@ -60,6 +61,27 @@ def _summary(day, records, language):
 @callback
 def async_register_services(hass: HomeAssistant) -> None:
     """Register once, including when there are no loaded account instances."""
+
+    async def options(call: ServiceCall) -> ServiceResponse:
+        return await recording_options(_target(hass, call))
+
+    async def record(call: ServiceCall) -> ServiceResponse:
+        return await record_entry(hass, _target(hass, call), call.data)
+
+    hass.services.async_register(
+        DOMAIN,
+        "get_recording_options",
+        options,
+        schema=vol.Schema(TARGET_SCHEMA),
+        supports_response=SupportsResponse.ONLY,
+    )
+    hass.services.async_register(
+        DOMAIN,
+        "record_entry",
+        record,
+        schema=RECORD_SCHEMA,
+        supports_response=SupportsResponse.ONLY,
+    )
 
     async def create(call: ServiceCall) -> ServiceResponse:
         return await async_create_entry(hass, _target(hass, call), call.data)
