@@ -1,6 +1,5 @@
 """Explicitly targeted calendar reads, entry writes, and metadata refresh actions."""
 
-from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 import voluptuous as vol
@@ -16,9 +15,9 @@ from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.util import dt as dt_util
 
-from .api_errors import ApiError, AuthenticationError, NotFoundError, PermissionDeniedError
 from .const import DOMAIN
 from .create_entry import CREATE_SCHEMA, async_create_entry
+from .daily_calendar import async_daily_records
 from .named_actions import RECORD_SCHEMA, record_entry, recording_options
 
 TARGET_SCHEMA = {vol.Required("config_entry_id"): cv.string}
@@ -96,54 +95,10 @@ def async_register_services(hass: HomeAssistant) -> None:
 
     async def daily(call: ServiceCall) -> ServiceResponse:
         entry = _target(hass, call)
-        runtime = entry.runtime_data
-        coordinator = runtime.coordinator
-        zone = ZoneInfo(hass.config.time_zone)
-        day = call.data.get("date", dt_util.now(zone).date())
-        try:
-            end = datetime.combine(day + timedelta(days=1), time.min, zone)
-        except OverflowError as err:
-            raise ServiceValidationError("Date must allow a following calendar day") from err
-        tracker_id = call.data.get("trackerId")
-        subject_id = call.data.get("subjectId")
-        try:
-            if not coordinator.last_update_success:
-                raise HomeAssistantError("Track Things metadata is unavailable")
-            if tracker_id is not None:
-                tracker = await coordinator.store.async_tracker(tracker_id)
-                selection = coordinator.entry.options.get("tracker_ids")
-                if (
-                    tracker["id"] != tracker_id
-                    or tracker["workspaceId"] != coordinator.store.workspace_id
-                ):
-                    raise ServiceValidationError("Tracker does not belong to this instance")
-                if selection is not None and tracker_id not in selection:
-                    raise ServiceValidationError("Tracker is not selected for this instance")
-            if subject_id is not None:
-                subject = await coordinator.store.async_subject(subject_id)
-                if (
-                    subject["id"] != subject_id
-                    or subject["workspaceId"] != coordinator.store.workspace_id
-                ):
-                    raise ServiceValidationError("Subject does not belong to this instance")
-            records = await runtime.calendar.async_get_records(
-                datetime.combine(day, time.min, zone), end, hass.config.time_zone
-            )
-        except NotFoundError as err:
-            raise ServiceValidationError("Unknown tracker or subject for this instance") from err
-        except (AuthenticationError, PermissionDeniedError) as err:
-            runtime.calendar.invalidate()
-            entry.async_start_reauth(hass)
-            raise HomeAssistantError("Track Things access must be restored") from err
-        except ApiError as err:
-            runtime.calendar.invalidate()
-            raise HomeAssistantError("Track Things calendar is temporarily unavailable") from err
-        records = [
-            (item, event)
-            for item, event in records
-            if (tracker_id is None or item["trackerId"] == tracker_id)
-            and (subject_id is None or item["subjectId"] == subject_id)
-        ]
+        day = call.data.get("date", dt_util.now(ZoneInfo(hass.config.time_zone)).date())
+        records = await async_daily_records(
+            hass, entry, day, call.data.get("trackerId"), call.data.get("subjectId")
+        )
         return {
             "date": day.isoformat(),
             "time_zone": hass.config.time_zone,

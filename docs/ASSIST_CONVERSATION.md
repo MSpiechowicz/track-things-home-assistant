@@ -4,8 +4,8 @@ A configured Track Things account now provides a selectable **Track Things**
 conversation entity. The local Hassil adapter owns recognition and questions;
 `DraftStore` owns schema validation and review. English, Polish, German and
 French use the same isolated draft flow. Explicit confirmation now saves through
-the shared schema-guarded entry writer. Calendar questions remain a separate
-increment.
+the shared schema-guarded entry writer. [Calendar questions](CALENDAR_CONVERSATION.md)
+now provide localized daily summaries, filter clarification and five-entry pages.
 
 The owner authorized proceeding with local Assist wiring on 2026-09-08 and
 postponing live voice tests. This follows the independent local-question path

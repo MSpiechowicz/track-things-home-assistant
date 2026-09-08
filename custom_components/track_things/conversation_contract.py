@@ -26,6 +26,8 @@ class Proposal:
     action: Literal["create", "patch", "calendar", "review", "confirm", "cancel", "repeat", "more"]
     patch: DraftPatch = field(default_factory=DraftPatch)
     day: date | None = None
+    tracker_name: str | None = None
+    subject_name: str | None = None
 
 
 class Clarification(ValueError):

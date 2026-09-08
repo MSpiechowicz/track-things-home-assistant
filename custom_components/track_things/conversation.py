@@ -17,6 +17,9 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.util import dt as dt_util
 
 from .api_errors import ApiError
+from .calendar_conversation import MESSAGES as CALENDAR_MESSAGES
+from .calendar_conversation import CalendarConversation
+from .calendar_intents import calendar_proposal
 from .conversation_adapter import AdapterContext, QuestionAdapter
 from .conversation_contract import Clarification, Proposal
 from .conversation_language import SENTENCES
@@ -54,6 +57,7 @@ class TrackThingsConversation(ConversationEntity):
         self.drafts = store if store is not None else DraftStore()
         self.confirmed_draft_callback: ConfirmedDraftCallback | None = confirmed_draft_callback
         self.writer = VoiceEntryWriter(self)
+        self.calendar = CalendarConversation(self)
         self._sessions: dict[SessionKey, Session] = {}
         self._adapters = {language: QuestionAdapter(language) for language in SENTENCES}
         # Serialize turns, including async submissions. No task can
@@ -73,6 +77,7 @@ class TrackThingsConversation(ConversationEntity):
 
     @callback
     def _expire(self, now=None):
+        self.calendar.expire()
         expired = set(self.drafts.expire())
         for key, session in tuple(self._sessions.items()):
             if session.draft_id in expired:
@@ -83,6 +88,7 @@ class TrackThingsConversation(ConversationEntity):
         async with self._turn_lock:
             self.drafts.clear()
             self._sessions.clear()
+            self.calendar.sessions.clear()
         await super().async_will_remove_from_hass()
 
     async def _metadata(self):
@@ -146,8 +152,22 @@ class TrackThingsConversation(ConversationEntity):
                     del self._sessions[key]
                     return VOICE_MESSAGES[language]["abandoned"], False
                 return VOICE_MESSAGES[language]["uncertain"], True
+            calendar_reply = await self.calendar.follow_up(key, text, language)
+            if calendar_reply is not None:
+                return calendar_reply
             if not self.entry.runtime_data.coordinator.last_update_success:
                 return words["unavailable"], False
+            if session is None:
+                # Read-only queries must not depend on current write schemas.
+                context = AdapterContext(
+                    DraftMetadata(self.entry.data["workspace_id"], {}, {}, {}),
+                    language,
+                    dt_util.utcnow(),
+                    self.hass.config.time_zone,
+                )
+                calendar = calendar_proposal(text.removeprefix("/"), context)
+                if calendar is not None:
+                    return await self.calendar.start(key, calendar, language)
             if session:
                 result = self.drafts.inspect(session.draft_id)
                 view = self.drafts.view(session.draft_id)
@@ -157,6 +177,8 @@ class TrackThingsConversation(ConversationEntity):
                     if result.descriptors and result.state != "review"
                     else None
                 )
+                if key in self.calendar.sessions:
+                    descriptor = None
                 context = AdapterContext(
                     metadata,
                     language,
@@ -175,8 +197,9 @@ class TrackThingsConversation(ConversationEntity):
             if not isinstance(proposal, Proposal) or not isinstance(proposal.patch, DraftPatch):
                 raise Clarification("invalid_proposal")
             if proposal.action == "calendar":
-                return words["calendar"], bool(session)
+                return await self.calendar.start(key, proposal, language)
             if proposal.action == "create":
+                self.calendar.sessions.pop(key, None)
                 # Validate a replacement before discarding any existing draft.
                 draft_id = str(uuid4())
                 self.drafts.start(draft_id, metadata, proposal.patch)
@@ -184,6 +207,8 @@ class TrackThingsConversation(ConversationEntity):
                     self.drafts.cancel(session.draft_id)
                 session = self._sessions[key] = Session(draft_id)
             elif session is None:
+                if proposal.action == "more":
+                    return CALENDAR_MESSAGES[language]["missing"], False
                 return words["start"], False
             elif proposal.action == "cancel":
                 self.drafts.cancel(session.draft_id)
