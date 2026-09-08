@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import TYPE_CHECKING
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -40,6 +40,11 @@ class MetadataCoordinator(DataUpdateCoordinator[MetadataSnapshot]):
             raise ConfigEntryAuthFailed("Track Things access must be restored") from err
         except ApiError as err:
             raise UpdateFailed("Track Things metadata is temporarily unavailable") from err
+
+    @callback
+    def async_entries_changed(self) -> None:
+        """Notify cache subscribers after an acknowledged write, without a platform dependency."""
+        self.async_update_listeners()
 
     @property
     def calendar_trackers(self) -> dict[str, Tracker]:

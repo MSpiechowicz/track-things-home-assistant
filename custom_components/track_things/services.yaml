@@ -41,3 +41,63 @@ refresh:
       selector:
         config_entry:
           integration: track_things
+create_entry:
+  name: Create entry
+  description: Create a manual entry using fresh metadata, schema validation, and a durable retry key. Returns entry and request_id.
+  fields:
+    config_entry_id:
+      name: Account instance
+      required: true
+      selector:
+        config_entry:
+          integration: track_things
+    trackerId:
+      name: Tracker ID
+      required: true
+      selector:
+        text:
+    subjectId:
+      name: Assigned subject ID
+      required: true
+      selector:
+        text:
+    occurredAt:
+      name: Occurrence timestamp
+      description: ISO timestamp with timezone. Keep this exact value when retrying.
+      required: true
+      selector:
+        text:
+    values:
+      name: Detail values
+      required: true
+      selector:
+        object:
+    periodStart:
+      name: Period start
+      description: Optional ISO timestamp with timezone, or null.
+      selector:
+        text:
+    periodEnd:
+      name: Period end
+      description: Optional ISO timestamp with timezone, or null.
+      selector:
+        text:
+    title:
+      name: Title
+      selector:
+        text:
+    note:
+      name: Note
+      selector:
+        text:
+          multiline: true
+    tagIds:
+      name: Tag IDs
+      description: Up to 50 unique workspace tag UUIDs.
+      selector:
+        object:
+    request_id:
+      name: Request ID
+      description: Reuse for identical retries. Omit to generate a UUID; returned with the entry.
+      selector:
+        text:

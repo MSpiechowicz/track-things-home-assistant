@@ -1,4 +1,4 @@
-"""Explicitly targeted calendar reads and metadata refresh actions."""
+"""Explicitly targeted calendar reads, entry writes, and metadata refresh actions."""
 
 from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
@@ -18,6 +18,7 @@ from homeassistant.util import dt as dt_util
 
 from .api_errors import ApiError, AuthenticationError, NotFoundError, PermissionDeniedError
 from .const import DOMAIN
+from .create_entry import CREATE_SCHEMA, async_create_entry
 
 TARGET_SCHEMA = {vol.Required("config_entry_id"): cv.string}
 DAILY_SCHEMA = vol.Schema(
@@ -59,6 +60,17 @@ def _summary(day, records, language):
 @callback
 def async_register_services(hass: HomeAssistant) -> None:
     """Register once, including when there are no loaded account instances."""
+
+    async def create(call: ServiceCall) -> ServiceResponse:
+        return await async_create_entry(hass, _target(hass, call), call.data)
+
+    hass.services.async_register(
+        DOMAIN,
+        "create_entry",
+        create,
+        schema=CREATE_SCHEMA,
+        supports_response=SupportsResponse.ONLY,
+    )
 
     async def daily(call: ServiceCall) -> ServiceResponse:
         entry = _target(hass, call)
