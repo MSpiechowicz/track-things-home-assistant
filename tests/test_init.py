@@ -59,9 +59,9 @@ async def test_entry_setup_reload_unload(
     await hass.async_block_till_done()
     assert config_entry.state is ConfigEntryState.NOT_LOADED
     with pytest.raises(RuntimeError, match="unloaded"):
-        await previous.get_user()
+        await previous.api.get_user()
     with pytest.raises(RuntimeError, match="unloaded"):
-        await current.get_user()
+        await current.api.get_user()
     assert DOMAIN not in hass.data
     assert DOMAIN not in hass.services.async_services()
     assert hass.states.async_entity_ids(DOMAIN) == []

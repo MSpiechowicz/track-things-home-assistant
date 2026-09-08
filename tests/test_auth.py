@@ -111,10 +111,10 @@ async def test_runtime_rotation_survives_reload(hass, config_entry, auth_http):
     setup_responses(auth_http)
     assert await hass.config_entries.async_setup(config_entry.entry_id)
     assert dict(config_entry.data).items() >= SESSION.items()
-    assert config_entry.runtime_data.credentials == Session(**SESSION)
+    assert config_entry.runtime_data.api.credentials == Session(**SESSION)
     setup_responses(auth_http)
     assert await hass.config_entries.async_reload(config_entry.entry_id)
-    assert auth_http.request.call_count == 5
+    assert auth_http.request.call_count == 9
     assert await hass.config_entries.async_unload(config_entry.entry_id)
 
 
@@ -138,7 +138,7 @@ async def test_runtime_revocation_starts_reauth(hass, config_entry, auth_http):
     auth_http.respond(status=401)
     auth_http.respond(status=401)
     with pytest.raises(AuthenticationError):
-        await config_entry.runtime_data.get_user()
+        await config_entry.runtime_data.api.get_user()
     await hass.async_block_till_done()
     flows = hass.config_entries.flow.async_progress()
     assert len(flows) == 1
