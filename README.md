@@ -153,6 +153,12 @@ Repository/organization rules must permit the Actions token to push the version
 commit to `main` and create tags; this workflow does not bypass branch protection.
 No PyPI upload or GitHub Release publication is included.
 
+## Conversation drafts
+
+The pure draft state machine supports typed detail updates, isolated sessions,
+review, and explicit revision-bound confirmation. See
+[the adapter contract and offline replay](docs/CONVERSATION_DRAFTS.md).
+
 ## License
 
 GPL-3.0-only; see [LICENSE](LICENSE).

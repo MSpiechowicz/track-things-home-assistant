@@ -192,8 +192,8 @@ def normalize_draft_values(schema: Any, values: dict[str, Any]) -> dict[str, Any
     return deepcopy({key: value for key, value in values.items() if key not in hidden})
 
 
-def validate_entry_values(values: dict[str, Any], schema: Any) -> None:
-    """Raise SchemaUnavailableError or EntryValueError; return None on success."""
+def validate_entry_values(values: dict[str, Any], schema: Any, *, partial: bool = False) -> None:
+    """Validate supplied values; partial drafts may omit required fields."""
     _values_object(values)
     fields = _fields(schema)
     visible = _visibility(fields, values)
@@ -205,7 +205,7 @@ def validate_entry_values(values: dict[str, Any], schema: Any) -> None:
                     key, "hidden", f"The entry value {key} belongs to a hidden detail."
                 )
         elif key not in values:
-            if field.required:
+            if field.required and not partial:
                 raise EntryValueError(
                     key, "required", f"The required entry value {key} is missing."
                 )
