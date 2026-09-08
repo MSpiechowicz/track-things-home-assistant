@@ -20,6 +20,8 @@ those drafts through questions, review and confirmed saving.
 [Calendar questions](docs/CALENDAR_CONVERSATION.md) support localized dates,
 tracker/subject clarification and isolated five-entry pagination.
 Live voice/device verification remains pending.
+Downloadable [diagnostics and recovery guidance](docs/DIAGNOSTICS.md) cover
+sanitized health snapshots, backend outages, reauthentication, and safe restart.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the
 [project board](https://github.com/users/MSpiechowicz/projects/4).

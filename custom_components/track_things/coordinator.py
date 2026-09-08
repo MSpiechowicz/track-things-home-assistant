@@ -2,13 +2,14 @@
 
 import logging
 from dataclasses import dataclass
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.util import dt as dt_util
 
 from .api_errors import ApiError, AuthenticationError, PermissionDeniedError
 from .api_models import Tracker
@@ -32,10 +33,13 @@ class MetadataCoordinator(DataUpdateCoordinator[MetadataSnapshot]):
         )
         self.store = MetadataStore(api, entry.data["workspace_id"])
         self.entry = entry
+        self.last_successful_refresh: datetime | None = None
 
     async def _async_update_data(self) -> MetadataSnapshot:
         try:
-            return await self.store.async_refresh()
+            snapshot = await self.store.async_refresh()
+            self.last_successful_refresh = dt_util.utcnow()
+            return snapshot
         except (AuthenticationError, PermissionDeniedError) as err:
             raise ConfigEntryAuthFailed("Track Things access must be restored") from err
         except ApiError as err:
