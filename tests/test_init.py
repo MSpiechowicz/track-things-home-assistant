@@ -29,7 +29,7 @@ async def test_yaml_setup(hass: HomeAssistant, package_version: str) -> None:
     integration = await async_get_integration(hass, DOMAIN)
     assert not integration.is_built_in
     assert integration.version == package_version
-    assert DOMAIN not in hass.services.async_services()
+    assert set(hass.services.async_services()[DOMAIN]) == {"get_daily_calendar", "refresh"}
     assert hass.states.async_entity_ids(DOMAIN) == []
 
 
@@ -63,7 +63,7 @@ async def test_entry_setup_reload_unload(
     with pytest.raises(RuntimeError, match="unloaded"):
         await current.api.get_user()
     assert DOMAIN not in hass.data
-    assert DOMAIN not in hass.services.async_services()
+    assert set(hass.services.async_services()[DOMAIN]) == {"get_daily_calendar", "refresh"}
     assert hass.states.async_entity_ids(DOMAIN) == []
 
 

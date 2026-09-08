@@ -7,6 +7,7 @@ source-quality checks, and CI. Account setup, workspace selection, and reauthent
 are available in the integration UI, along with tracker selection and five-minute
 metadata discovery. See the [metadata guide](docs/METADATA.md). A read-only
 workspace calendar is available in Home Assistant; see the [calendar guide](docs/CALENDAR.md).
+Daily-calendar and refresh actions are available; see the [action guide](docs/CALENDAR_ACTIONS.md).
 Voice commands remain planned and are **not available yet**.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the

@@ -14,6 +14,7 @@ from .auth import AuthenticatedApi, normalize_backend_url, session_data
 from .calendar_query import CalendarQuery
 from .const import DOMAIN
 from .coordinator import MetadataCoordinator, TrackThingsRuntime
+from .services import async_register_services
 
 CONFIG_SCHEMA = vol.Schema({vol.Optional(DOMAIN): vol.Schema({})}, extra=vol.ALLOW_EXTRA)
 type TrackThingsConfigEntry = ConfigEntry[TrackThingsRuntime]
@@ -21,6 +22,7 @@ type TrackThingsConfigEntry = ConfigEntry[TrackThingsRuntime]
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Allow empty YAML for installation smoke checks; accounts use the UI."""
+    async_register_services(hass)
     return True
 
 
