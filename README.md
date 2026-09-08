@@ -13,6 +13,8 @@ A [Google Home daily-summary shortcut blueprint](docs/GOOGLE_DAILY_SUMMARY.md)
 is available for a configured fixed speaker; real-device verification remains pending.
 A [Google Home fixed-entry shortcut](docs/GOOGLE_FIXED_ENTRY.md) records configured
 values with a stable request ID across its retry; real-device verification remains pending.
+An offline [guided-question adapter](docs/CONVERSATION_ADAPTER.md) supports English,
+Polish, German, and French, including explicit default-detail proposals.
 Full conversational voice commands remain planned and are **not available yet**.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the
