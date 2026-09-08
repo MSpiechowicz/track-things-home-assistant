@@ -3,6 +3,7 @@
 import logging
 from dataclasses import dataclass
 from datetime import timedelta
+from typing import TYPE_CHECKING
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -13,6 +14,9 @@ from .api_errors import ApiError, AuthenticationError, PermissionDeniedError
 from .api_models import Tracker
 from .auth import AuthenticatedApi
 from .metadata import MetadataSnapshot, MetadataStore
+
+if TYPE_CHECKING:
+    from .calendar_query import CalendarQuery
 
 CONF_TRACKER_IDS = "tracker_ids"
 
@@ -61,3 +65,4 @@ class MetadataCoordinator(DataUpdateCoordinator[MetadataSnapshot]):
 class TrackThingsRuntime:
     api: AuthenticatedApi
     coordinator: MetadataCoordinator
+    calendar: CalendarQuery

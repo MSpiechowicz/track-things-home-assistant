@@ -38,6 +38,7 @@ async def test_real_options_flow_keeps_runtime_and_schema_cache(hass, config_ent
     runtime = config_entry.runtime_data
     runtime.coordinator.store.snapshot.trackers["tracker-1"] = TRACKER
     calls = auth_http.request.call_count
+    auth_http.respond({"items": [], "nextCursor": None})
     result = await hass.config_entries.options.async_init(config_entry.entry_id)
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], user_input={"tracker_ids": ["tracker-1"]}
@@ -46,5 +47,6 @@ async def test_real_options_flow_keeps_runtime_and_schema_cache(hass, config_ent
     await hass.async_block_till_done()
     assert config_entry.options == {"tracker_ids": ["tracker-1"]}
     assert config_entry.runtime_data is runtime
-    assert auth_http.request.call_count == calls
+    assert auth_http.request.call_count == calls + 1
+    assert auth_http.request.call_args.args[1].endswith("/entries")
     assert await hass.config_entries.async_unload(config_entry.entry_id)

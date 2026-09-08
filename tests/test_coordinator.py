@@ -36,6 +36,7 @@ async def test_polling_and_listener_cleanup(hass, config_entry, auth_http):
     assert coordinator.update_interval == timedelta(minutes=5)
     refresh = AsyncMock(return_value=coordinator.data)
     coordinator.store.async_refresh = refresh
+    auth_http.respond({"items": [], "nextCursor": None})
     now = dt_util.utcnow()
     async_fire_time_changed(hass, now + timedelta(minutes=6))
     await hass.async_block_till_done()

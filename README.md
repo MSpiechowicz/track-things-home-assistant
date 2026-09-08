@@ -5,8 +5,9 @@ The repository provides loading/unloading, an asynchronous API client, pure
 dynamic-field validation, pure calendar mapping, a Home Assistant test harness,
 source-quality checks, and CI. Account setup, workspace selection, and reauthentication
 are available in the integration UI, along with tracker selection and five-minute
-metadata discovery. See the [metadata guide](docs/METADATA.md). Calendar entities and voice commands are
-planned features and are **not available yet**.
+metadata discovery. See the [metadata guide](docs/METADATA.md). A read-only
+workspace calendar is available in Home Assistant; see the [calendar guide](docs/CALENDAR.md).
+Voice commands remain planned and are **not available yet**.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the
 [project board](https://github.com/users/MSpiechowicz/projects/4).
@@ -95,7 +96,7 @@ no import/setup errors. Home Assistant's standard warning about an untested cust
 integration is expected. First startup downloads Home Assistant's additional
 runtime dependencies and can take a few minutes; do not use `--skip-pip` in a
 fresh environment. Its HTTP server is bound to loopback on port 18123. Track
-Things adds an account config flow but no entities yet. The lifecycle tests
+Things adds an account config flow and a read-only calendar for configured workspaces. The lifecycle tests
 cover authenticated config-entry setup/reload/unload.
 
 ## Scope of the planned integration

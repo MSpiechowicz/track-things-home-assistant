@@ -28,3 +28,4 @@ def setup_responses(http):
     http.respond(WORKSPACE)
     http.respond({"items": [], "nextCursor": None})
     http.respond({"items": [], "nextCursor": None})
+    http.respond({"items": [], "nextCursor": None})  # Initial calendar range
