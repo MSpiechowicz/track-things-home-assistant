@@ -1,0 +1,45 @@
+{
+  "title": "Track Things",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect Track Things",
+        "description": "Sign in to one Track Things account. HTTPS is required; enable local HTTP only for a development backend on your local network.",
+        "data": {
+          "backend_url": "Backend URL",
+          "identifier": "Email or username",
+          "password": "Password",
+          "allow_local_http": "Allow HTTP for local development"
+        }
+      },
+      "workspace": {
+        "title": "Select workspace",
+        "description": "Choose the workspace accessible to this account.",
+        "data": {
+          "workspace_id": "Workspace"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Sign in again",
+        "description": "Sign in with the original account to restore access to the configured workspace.",
+        "data": {
+          "identifier": "Email or username",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Enter an HTTPS backend URL without credentials, query, or fragment. Local HTTP requires explicit opt-in.",
+      "invalid_auth": "The credentials were rejected. Please try again.",
+      "cannot_connect": "Cannot connect to Track Things. Try again later.",
+      "invalid_workspace": "Choose an accessible workspace.",
+      "wrong_account": "Sign in with the account originally used for this integration.",
+      "workspace_unavailable": "This account no longer has access to the configured workspace. Restore access and try again."
+    },
+    "abort": {
+      "already_configured": "This backend, account, and workspace are already configured.",
+      "no_workspaces": "This account has no accessible workspaces.",
+      "reauth_successful": "Authentication was successful."
+    }
+  }
+}

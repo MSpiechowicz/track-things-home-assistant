@@ -14,7 +14,11 @@ dependencies, acceptance checks, and verification steps.
 [Issue #1](https://github.com/MSpiechowicz/track-things-home-assistant/issues/1)
 only establishes the package, lifecycle, tests, CI, and this document. It adds no
 account UI, backend API calls, calendar platform, or voice implementation. Empty
-YAML enables development smoke testing until the account config flow exists.
+YAML enables development smoke testing without account credentials.
+
+[Issue #7](https://github.com/MSpiechowicz/track-things-home-assistant/issues/7)
+adds account/workspace configuration, serialized session rotation, runtime
+setup/unload, and same-account reauthentication. See [account setup](ACCOUNT_SETUP.md).
 
 Baseline: Home Assistant 2026.9.0 and Python 3.14.2+. CI tests the baseline and the
 latest stable compatible custom-component harness. Handwritten source/test files
