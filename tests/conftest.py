@@ -29,3 +29,27 @@ async def config_entry(hass: HomeAssistant) -> AsyncIterator[MockConfigEntry]:
     mock_platform(hass, f"{DOMAIN}.config_flow", built_in=False)
     with mock_config_flow(DOMAIN, ConfigFlow):
         yield MockConfigEntry(domain=DOMAIN, title="Track Things test", data={}, version=1)
+
+
+@pytest.fixture
+async def api_http(monkeypatch):
+    """Exercise the client's actual aiohttp session without opening network sockets."""
+    from unittest.mock import AsyncMock
+
+    import aiohttp
+
+    from custom_components.track_things.api import TrackThingsApi
+
+    from .api_fixtures import MockHttp
+
+    http = MockHttp(monkeypatch)
+    sleep = AsyncMock()
+    async with aiohttp.ClientSession() as session:
+        client = TrackThingsApi(
+            "https://backend.example.test",
+            session,
+            access_token="sentinel-access",
+            timeout=7,
+            sleep=sleep,
+        )
+        yield client, http, sleep, session
