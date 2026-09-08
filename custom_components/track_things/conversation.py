@@ -24,9 +24,10 @@ from .conversation_questions import questions
 from .conversation_responses import MESSAGES, review_speech
 from .dialogue import DraftError, DraftMetadata, DraftPatch, DraftStore, SubmissionIntent
 from .schema import EntryValueError
+from .voice_creation import PendingWrite, VoiceEntryWriter
+from .voice_responses import VOICE_MESSAGES
 
-# The callback owns refreshing metadata and safe backend submission (issue #17).
-# No callback is installed by this increment. It receives only confirmed drafts.
+# Optional callback seam for alternate runtimes. Production uses VoiceEntryWriter.
 ConfirmedDraftCallback = Callable[[SubmissionIntent], Awaitable[str]]
 SessionKey = tuple[str, str | None, str | None, str | None, str]
 
@@ -35,6 +36,8 @@ SessionKey = tuple[str, str | None, str | None, str | None, str]
 class Session:
     draft_id: str
     last_speech: str = ""
+    reviewed_revision: str | None = None
+    pending: PendingWrite | None = None
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -50,9 +53,10 @@ class TrackThingsConversation(ConversationEntity):
         self._attr_unique_id = f"{entry.entry_id}_conversation"
         self.drafts = store if store is not None else DraftStore()
         self.confirmed_draft_callback: ConfirmedDraftCallback | None = confirmed_draft_callback
+        self.writer = VoiceEntryWriter(self)
         self._sessions: dict[SessionKey, Session] = {}
         self._adapters = {language: QuestionAdapter(language) for language in SENTENCES}
-        # Serialize turns, including a future async submission callback. No task can
+        # Serialize turns, including async submissions. No task can
         # observe a half-applied proposal or confirm the same draft twice.
         self._turn_lock = asyncio.Lock()
         self._closed = False
@@ -109,6 +113,10 @@ class TrackThingsConversation(ConversationEntity):
             user_input.satellite_id,
             language,
         )
+        # Bind confirmation to the review visible when this turn arrived, not
+        # a new review produced by another turn while this one waits for the lock.
+        observed_session = self._sessions.get(key)
+        confirmation_revision = observed_session.reviewed_revision if observed_session else None
         async with self._turn_lock:
             self._expire()
             if language not in self._adapters:
@@ -116,15 +124,28 @@ class TrackThingsConversation(ConversationEntity):
             elif self._closed:
                 speech, follow_up = MESSAGES[language]["unavailable"], False
             else:
-                speech, follow_up = await self._turn(key, user_input.text, language)
+                speech, follow_up = await self._turn(
+                    key, user_input.text, language, confirmation_revision
+                )
         response = intent.IntentResponse(language=user_input.language)
         response.async_set_speech(speech)
         return ConversationResult(response, conversation_id, follow_up)
 
-    async def _turn(self, key, text, language):
+    async def _turn(self, key, text, language, confirmation_revision):
         words = MESSAGES[language]
         session = self._sessions.get(key)
         try:
+            if session and session.pending:
+                # A possibly committed payload is immutable. Only literal user
+                # confirmation may retry it; proposals cannot mutate or replace it.
+                command = text.strip().casefold().removeprefix("/")
+                if command in SENTENCES[language]["confirm"]:
+                    return await self._save(key, session, language)
+                if command in SENTENCES[language]["cancel"]:
+                    self.drafts.cancel(session.draft_id)
+                    del self._sessions[key]
+                    return VOICE_MESSAGES[language]["abandoned"], False
+                return VOICE_MESSAGES[language]["uncertain"], True
             if not self.entry.runtime_data.coordinator.last_update_success:
                 return words["unavailable"], False
             if session:
@@ -176,9 +197,17 @@ class TrackThingsConversation(ConversationEntity):
                 self.drafts.review(session.draft_id)
             elif proposal.action == "confirm":
                 result = self.drafts.inspect(session.draft_id)
-                if result.state != "review":
+                if (
+                    result.state != "review"
+                    or session.reviewed_revision != result.revision
+                    or confirmation_revision != result.revision
+                    or text.strip().casefold().removeprefix("/")
+                    not in SENTENCES[language]["confirm"]
+                ):
                     raise DraftError("review_required")
                 if self.confirmed_draft_callback is None:
+                    if self.writer is not None:
+                        return await self._save(key, session, language)
                     return words["saving"], True
                 submission = self.drafts.confirm(session.draft_id, result.revision)
                 del self._sessions[key]
@@ -207,11 +236,23 @@ class TrackThingsConversation(ConversationEntity):
                 return words["recovery"] + " " + session.last_speech, True
             return words["recovery"] + " " + words["start"], False
 
+    async def _save(self, key, session, language):
+        outcome = await self.writer.confirm(session)
+        speech = VOICE_MESSAGES[language][outcome]
+        if outcome == "saved":
+            self._sessions.pop(key, None)
+            return speech, False
+        if outcome in ("changed", "rejected"):
+            speech += " " + self._prompt(session, language)
+        session.last_speech = speech
+        return speech, True
+
     def _prompt(self, session, language):
         result = self.drafts.inspect(session.draft_id)
         view = self.drafts.view(session.draft_id)
         if result.state == "review" or not result.descriptors:
             result = self.drafts.review(session.draft_id)
+            session.reviewed_revision = result.revision
             return review_speech(result, view.metadata, language)
         prompt = questions(result, view.metadata, language)[0].text
         definition = result.descriptors[0].definition

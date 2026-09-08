@@ -5,7 +5,12 @@ from datetime import UTC, date, datetime, time
 from typing import Any
 
 from .dialogue_models import Descriptor, DraftError, DraftMetadata, DraftPatch
-from .schema import normalize_draft_values, resolve_field_visibility, validate_entry_values
+from .schema import (
+    EntryValueError,
+    normalize_draft_values,
+    resolve_field_visibility,
+    validate_entry_values,
+)
 
 
 def eligible_trackers(metadata: DraftMetadata) -> tuple[str, ...]:
@@ -100,3 +105,27 @@ def occurrence_payload(occurrence: date | datetime) -> dict[str, str]:
         stamp = datetime.combine(occurrence, time(), UTC).isoformat()
         return {"occurredAt": stamp, "periodStart": stamp, "periodEnd": stamp}
     raise DraftError("invalid_occurrence")
+
+
+def compatible_answers(old_schema, schema, values):
+    """Keep stable field identities/types whose answers satisfy the new constraints."""
+    old_fields = {item["key"]: item for item in old_schema["fields"]}
+    retained = {}
+    for definition in schema["fields"]:
+        key = definition["key"]
+        old = old_fields.get(key, {})
+        if (
+            key not in values
+            or old.get("id") != definition["id"]
+            or old.get("type") != definition["type"]
+        ):
+            continue
+        # Validate one answer without its visibility dependency; full-schema
+        # normalization below removes answers hidden by changed controllers.
+        standalone = {k: v for k, v in definition.items() if k != "visibleWhen"}
+        try:
+            validate_entry_values({key: values[key]}, {"fields": [standalone]}, partial=True)
+        except EntryValueError:
+            continue
+        retained[key] = deepcopy(values[key])
+    return retained

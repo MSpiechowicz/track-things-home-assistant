@@ -3,9 +3,9 @@
 A configured Track Things account now provides a selectable **Track Things**
 conversation entity. The local Hassil adapter owns recognition and questions;
 `DraftStore` owns schema validation and review. English, Polish, German and
-French use the same isolated draft flow. Calendar dispatch and backend saving
-remain separate increments: confirmation explicitly reports that saving is
-unavailable, and creates no entry.
+French use the same isolated draft flow. Explicit confirmation now saves through
+the shared schema-guarded entry writer. Calendar questions remain a separate
+increment.
 
 The owner authorized proceeding with local Assist wiring on 2026-09-08 and
 postponing live voice tests. This follows the independent local-question path
@@ -34,7 +34,8 @@ No Gemini agent, API key, subscription, or model call is needed for this path.
 5. Use `review` / `sprawdź` to omit remaining optional details and read back the
    tracker, subject, occurrence and values. If all details are answered or
    skipped, review is presented automatically. A subsequent `confirm` /
-   `potwierdź` reports saving unavailable. Verify no entry appears in the backend.
+   `potwierdź` submits the reviewed entry. Verify the acknowledged entry in the
+   frontend; if metadata changed, answer the new questions and confirm again.
 
 The sole eligible subject is automatically selected from tracker assignments.
 Multiple eligible subjects are enumerated; the speaker's identity never selects
@@ -73,37 +74,60 @@ An old conversation ID cannot revive a draft. Turns are serialized per entity.
 When metadata refresh reports a connectivity/auth failure, the agent reports
 unavailability without parsing further answers. Restore connectivity or
 reauthenticate through the integration UI. A still-unexpired draft can then
-continue; otherwise start again. No automatic retry can save an entry in this
-increment. Metadata snapshots guide questions; the future saving callback must
-refresh assignments/schema and obtain renewed review when meanings change.
+continue; otherwise start again. There are no background write retries. After an
+uncertain submission, restore access and use the same conversation to retry the
+original payload while it remains unexpired.
 
-## Confirmed-draft handoff
+## Confirmed writes
 
-`TrackThingsConversation.confirmed_draft_callback` is an internal optional async
-callback accepting `SubmissionIntent` and returning response speech. Nothing
-installs it yet. Only an explicit local confirmation of the current reviewed
-revision invokes it. The draft is consumed before awaiting the callback, so
-concurrent confirmations cannot hand it off twice. The future saving integration
-(#17) owns transport retries, uncertain outcomes, idempotency and metadata
-revalidation; callback handoff alone is not a claim of successful saving.
+The production writer refreshes assignments, labels and immutable schemas before
+submission. Changed metadata invalidates the old review. Answers with stable
+field IDs/types that still satisfy the new schema are retained; invalid answers
+are requested again. A removed subject requires an explicit replacement choice,
+even if only one remains. Backend schema conflicts return to review too.
+
+The agent accepts only an explicit local confirmation phrase for the revision
+it actually read back. Adapter proposals alone cannot authorize saving. The
+shared create-action validation checks mutable resources again before the POST;
+the backend remains authoritative for permissions and schema guards. Successful
+responses invalidate the calendar cache through the existing notification hook.
+
+Each confirmed revision gets one idempotency key. A lost response keeps the
+exact payload/key in the same isolated session. Say `confirm` / `potwierdź` to
+retry it. Corrections and replacement drafts are blocked while the outcome is
+unknown. Cancelling stops retries but explicitly warns that the entry may already
+exist. Check the calendar before creating another copy. A definitive schema
+rejection invalidates confirmation; a newly reviewed revision receives a new key.
+
+Permission and authentication failures use localized, content-free messages;
+authentication failures start reauthentication. An unavailable metadata read
+reports that no write was attempted. A failed write response never claims success.
+Uncertain submissions expire with their draft and are cleared on unload/restart;
+they are never persisted or replayed. Expiry/restart cannot undo a backend commit,
+so check the calendar before recreating an uncertain entry.
+
+`confirmed_draft_callback` remains an optional internal seam for alternate
+runtimes/tests. Production installs `VoiceEntryWriter` and does not use that seam.
 
 ## Verification and deferred device checks
 
 ```sh
-.venv/bin/python -m pytest -q tests/test_conversation.py tests/test_conversation_sessions.py tests/test_init.py
+.venv/bin/python -m pytest -q tests/test_voice_creation.py tests/test_voice_creation_conflicts.py
 .venv/bin/python -m ruff check .
 .venv/bin/python -m ruff format --check .
 .venv/bin/python scripts/check_file_sizes.py
 .venv/bin/python -m pytest -q
 ```
 
-The tests load the real config entry and conversation entity and invoke HA's
-conversation API. Synthetic cached metadata drives Headache/Anna/Ben transcripts.
-Expected: subject clarification, typed pain/severity answers, correction from
-seven to six, review, then saving unavailable and zero HTTP POSTs. The same
-transcript runs in all four languages. Session tests cover context boundaries,
-expiry, cancellation, reload and a mocked one-time confirmed callback. These are
-automated text replays, not manual Assist UI or microphone evidence.
+The voice-write tests load the real config entry and Assist agent with a mocked
+API and an idempotent synthetic sink. English/Polish transcripts read back
+Headache/Anna, occurrence and typed severity before a single acknowledged write.
+They exercise duplicate confirmations, lost responses with identical retries,
+changed schemas/assignments, permission errors, expiry and forged confirmation.
+The original four-language draft and session tests remain in the full suite.
+These are automated text replays, not manual Assist UI or microphone evidence.
+See [the voice-write verification record](VOICE_CREATION.md) for commands and
+expected/actual results, plus the disposable-backend walkthrough.
 
 Deferred at the owner's request: disposable Assist UI/pipeline walkthrough;
 English/Polish STT/TTS and actual follow-up listening; Google/Nest speaker

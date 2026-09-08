@@ -172,6 +172,8 @@ No PyPI upload or GitHub Release publication is included.
 The pure draft state machine supports typed detail updates, isolated sessions,
 review, and explicit revision-bound confirmation. See
 [the adapter contract and offline replay](docs/CONVERSATION_DRAFTS.md).
+Local Assist can save reviewed entries with schema revalidation and safe retries;
+see [confirmed voice creation](docs/VOICE_CREATION.md).
 
 ## License
 
