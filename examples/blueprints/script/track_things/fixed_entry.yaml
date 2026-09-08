@@ -1,0 +1,112 @@
+blueprint:
+  name: Track Things fixed entry
+  description: >-
+    Record preconfigured values for one explicit tracker and subject. Invoking
+    this script authorizes the write without a confirmation question. One retry
+    uses the same request ID and occurrence. Output always uses the chosen speaker.
+  domain: script
+  homeassistant:
+    min_version: "2026.9.0"
+  input:
+    config_entry_id:
+      name: Track Things account
+      selector:
+        config_entry:
+          integration: track_things
+    tracker_id:
+      name: Active manual tracker ID
+      selector:
+        text:
+    subject_id:
+      name: Assigned subject ID
+      selector:
+        text:
+    occurred_at:
+      name: Occurrence timestamp
+      description: Timezone-bearing ISO timestamp or template, evaluated once per run.
+      default: "{{ now().isoformat() }}"
+      selector:
+        template:
+    values:
+      name: Fixed schema field values
+      description: "Object matching the current tracker schema, for example severity: 6."
+      selector:
+        object:
+    tts_entity:
+      name: Text-to-speech entity
+      selector:
+        entity:
+          filter:
+            - domain: tts
+    output_speaker:
+      name: Fixed output speaker
+      selector:
+        entity:
+          filter:
+            - domain: media_player
+    language:
+      name: Announcement language
+      default: en
+      selector:
+        select:
+          options: [en, pl]
+    tts_language:
+      name: TTS provider language code
+      default: en
+      selector:
+        text:
+mode: single
+sequence:
+  - variables:
+      announcement_language: !input language
+      occurrence: !input occurred_at
+      # A run suffix separates calls that share a parent automation context.
+      invocation_id: >-
+        {{ context.id }}-{{ [range(65536) | random, range(65536) | random,
+                            range(65536) | random, range(65536) | random] | join('-') }}
+      fixed_values: !input values
+      created: null
+  - repeat:
+      sequence:
+        - action: track_things.create_entry
+          data:
+            config_entry_id: !input config_entry_id
+            trackerId: !input tracker_id
+            subjectId: !input subject_id
+            occurredAt: "{{ occurrence }}"
+            values: "{{ fixed_values }}"
+            request_id: "{{ invocation_id }}"
+          response_variable: created
+          continue_on_error: true
+      until: >-
+        {{ repeat.index >= 2 or
+           (created is mapping and created.get('request_id') == invocation_id
+            and created.get('entry') is mapping and created.entry.get('id') is string
+            and created.entry.get('id') | length > 0) }}
+  - if: >-
+      {{ created is mapping and created.get('request_id') == invocation_id
+         and created.get('entry') is mapping and created.entry.get('id') is string
+         and created.entry.get('id') | length > 0 }}
+    then:
+      - action: tts.speak
+        target:
+          entity_id: !input tts_entity
+        data:
+          media_player_entity_id: !input output_speaker
+          language: !input tts_language
+          message: >-
+            {{ 'Zapisano wpis w Track Things.' if announcement_language == 'pl'
+               else 'Entry saved in Track Things.' }}
+    else:
+      - action: tts.speak
+        target:
+          entity_id: !input tts_entity
+        data:
+          media_player_entity_id: !input output_speaker
+          language: !input tts_language
+          message: >-
+            {{ 'Nie udało się potwierdzić zapisu. Sprawdź Track Things przed ponownym uruchomieniem.'
+               if announcement_language == 'pl'
+               else 'Entry could not be confirmed. Check Track Things before running again.' }}
+      - stop: Track Things entry was not confirmed; inspect the trace before another invocation.
+        error: true
