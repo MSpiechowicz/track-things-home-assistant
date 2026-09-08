@@ -19,6 +19,7 @@ from .dialogue_models import (
     SubmissionIntent,
 )
 from .dialogue_rules import (
+    compatible_answers,
     eligible_subjects,
     eligible_trackers,
     field_descriptors,
@@ -188,14 +189,46 @@ class DraftStore:
         draft.touched = self._idle_clock()
         return self._result(draft_id, draft)
 
-    def confirm(self, draft_id: str, revision: str) -> SubmissionIntent:
+    def refresh(self, draft_id: str, metadata: DraftMetadata) -> DraftResult:
+        """Invalidate review and retain answers only for unchanged field meanings."""
+        draft = deepcopy(self._get(draft_id))
+        old_schema = tracker_schema(draft.metadata, draft.tracker_id) if draft.tracker_id else None
+        draft.metadata = deepcopy(metadata)
+        draft.reviewed = None
+        draft.revision = str(uuid4())
+        draft.touched = self._idle_clock()
+        if draft.tracker_id not in eligible_trackers(metadata):
+            draft.tracker_id = draft.subject_id = None
+            draft.values, draft.skipped = {}, set()
+        else:
+            schema = tracker_schema(metadata, draft.tracker_id)
+            old_fields = {item["key"]: item for item in old_schema["fields"]}
+            compatible = {
+                item["key"]
+                for item in schema["fields"]
+                if {k: v for k, v in item.items() if k != "label"}
+                == {k: v for k, v in old_fields.get(item["key"], {}).items() if k != "label"}
+            }
+            draft.values, draft.skipped = patch_values(
+                schema,
+                compatible_answers(old_schema, schema, draft.values),
+                draft.skipped & compatible,
+                DraftPatch(),
+            )
+            if draft.subject_id not in eligible_subjects(metadata, draft.tracker_id):
+                draft.subject_id = None
+        self._drafts[draft_id] = draft
+        return self._result(draft_id, draft)
+
+    def confirm(self, draft_id: str, revision: str, *, consume: bool = True) -> SubmissionIntent:
         draft = self._get(draft_id)
         if draft.reviewed is None or revision != draft.revision:
             raise DraftError("review_required")
         intent = SubmissionIntent(
             draft_id, revision, draft.metadata.workspace_id, deepcopy(draft.reviewed)
         )
-        del self._drafts[draft_id]
+        if consume:
+            del self._drafts[draft_id]
         return intent
 
     def cancel(self, draft_id: str) -> None:

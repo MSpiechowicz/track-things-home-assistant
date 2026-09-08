@@ -74,6 +74,7 @@ async def test_creation_reaches_review_without_saving(
     unavailable,
 ):
     agent = await setup_agent(hass, config_entry, auth_http)
+    agent.writer = None  # Explicitly exercise the optional no-writer runtime seam.
     first = await say(hass, agent, start, language=language)
     cid = first.conversation_id
     assert first.continue_conversation
