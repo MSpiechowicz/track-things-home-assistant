@@ -1,13 +1,17 @@
 # Track Things for Home Assistant
 
-Custom integration scaffold for [Track Things](https://track-things.com).
+Custom integration for [Track Things](https://track-things.com).
 The repository provides loading/unloading, an asynchronous API client, pure
 dynamic-field validation, pure calendar mapping, a Home Assistant test harness,
-source-quality checks, and CI. Account setup, calendar entities, and voice commands are planned features
-and are **not available yet**.
+source-quality checks, and CI. Account setup, workspace selection, and reauthentication
+are available in the integration UI. Calendar entities and voice commands are
+planned features and are **not available yet**.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the
 [project board](https://github.com/users/MSpiechowicz/projects/4).
+
+The [account setup guide](docs/ACCOUNT_SETUP.md) documents HTTPS/local-development
+configuration, session storage, reauthentication, and verification.
 
 The [API client guide](docs/API_CLIENT.md) documents resource methods, authentication,
 pagination, retries, errors, and offline verification.
@@ -36,8 +40,7 @@ python -m pytest -q
 ```
 
 Tests load the real custom component through Home Assistant and use mock config
-entries; only the future config-flow platform/handler is stubbed, since Home
-Assistant requires it for synthetic entries. No running backend, credentials,
+entries and real config flows; HTTP responses are synthetic. No running backend, credentials,
 or microphone is required. Internet
 sockets are disabled during tests, with Unix sockets allowed for the event loop.
 Home Assistant's fixture teardown also checks for leaked tasks and resources.
@@ -67,9 +70,9 @@ for this check. Use `python -m ruff format .` to format changed Python files.
 
 ## Disposable-instance smoke test
 
-This scaffold has no config flow, so it does not appear as an addable integration
-in the UI. Empty YAML is a temporary development-only loading path and takes no
-account settings. Do not put tokens or passwords in it.
+Add Track Things through Settings → Devices & services → Add integration.
+Empty YAML remains a development-only loading check and takes no account
+settings. Do not put tokens or passwords in YAML.
 
 After installing the minimum-version test environment above, run the following
 from the repository root. The directory created here is disposable and contains
@@ -91,8 +94,8 @@ no import/setup errors. Home Assistant's standard warning about an untested cust
 integration is expected. First startup downloads Home Assistant's additional
 runtime dependencies and can take a few minutes; do not use `--skip-pip` in a
 fresh environment. Its HTTP server is bound to loopback on port 18123. Track
-Things adds no UI or entities yet. The lifecycle tests cover config-entry
-setup/reload/unload before the account config flow is implemented.
+Things adds an account config flow but no entities yet. The lifecycle tests
+cover authenticated config-entry setup/reload/unload.
 
 ## Scope of the planned integration
 

@@ -51,6 +51,10 @@ class TrackThingsApi(ApiTransport):
             )
         )
 
+    async def sync_user(self) -> User:
+        """Synchronize the authenticated identity before reading its profile."""
+        return decode(await self.request("POST", "/api/users/sync"), User)
+
     async def get_user(self) -> User:
         return decode(await self.request("GET", "/api/users/me"), User)
 

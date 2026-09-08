@@ -1,0 +1,45 @@
+{
+  "title": "Track Things",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Połącz z Track Things",
+        "description": "Zaloguj się na jedno konto Track Things. Wymagany jest HTTPS; HTTP włączaj tylko dla serwera deweloperskiego w sieci lokalnej.",
+        "data": {
+          "backend_url": "Adres URL serwera",
+          "identifier": "E-mail lub nazwa użytkownika",
+          "password": "Hasło",
+          "allow_local_http": "Zezwól na HTTP w lokalnym środowisku deweloperskim"
+        }
+      },
+      "workspace": {
+        "title": "Wybierz przestrzeń roboczą",
+        "description": "Wybierz przestrzeń roboczą dostępną dla tego konta.",
+        "data": {
+          "workspace_id": "Przestrzeń robocza"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Zaloguj się ponownie",
+        "description": "Zaloguj się na pierwotne konto, aby przywrócić dostęp do skonfigurowanej przestrzeni roboczej.",
+        "data": {
+          "identifier": "E-mail lub nazwa użytkownika",
+          "password": "Hasło"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Podaj adres HTTPS bez danych logowania, parametrów zapytania ani fragmentu. Lokalny HTTP wymaga jawnej zgody.",
+      "invalid_auth": "Dane logowania zostały odrzucone. Spróbuj ponownie.",
+      "cannot_connect": "Nie można połączyć się z Track Things. Spróbuj później.",
+      "invalid_workspace": "Wybierz dostępną przestrzeń roboczą.",
+      "wrong_account": "Zaloguj się na konto pierwotnie użyte w tej integracji.",
+      "workspace_unavailable": "To konto nie ma już dostępu do skonfigurowanej przestrzeni roboczej. Przywróć dostęp i spróbuj ponownie."
+    },
+    "abort": {
+      "already_configured": "Ten serwer, konto i przestrzeń robocza są już skonfigurowane.",
+      "no_workspaces": "To konto nie ma dostępnych przestrzeni roboczych.",
+      "reauth_successful": "Uwierzytelnienie powiodło się."
+    }
+  }
+}
