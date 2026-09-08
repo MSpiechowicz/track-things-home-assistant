@@ -77,8 +77,8 @@ owns replaying questions and presenting further details.
 Aliases map stable IDs to literal spellings under keys such as `pl:subjects`,
 `de:trackers`, `fr:headache:fields`, and `en:headache:severity-id:options`.
 Unknown IDs cannot match; collisions return all candidates for clarification.
-No subject is inferred from speaker identity. Alias configuration UI belongs
-to its own issue.
+No subject is inferred from speaker identity. Configure aliases and an explicit default subject through the
+[voice options flow](VOICE_OPTIONS.md).
 
 ## Google/Gemini boundary
 
