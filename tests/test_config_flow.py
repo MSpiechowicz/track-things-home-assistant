@@ -16,12 +16,18 @@ from .auth_fixtures import ENTRY_DATA, LOGIN, login_responses
 
 
 async def start(hass):
-    return await hass.config_entries.flow.async_init(DOMAIN, context={"source": SOURCE_USER})
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": SOURCE_USER})
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"next_step_id": "advanced"}
+    )
+    return await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"next_step_id": "password"}
+    )
 
 
 async def test_setup_workspace_selection_and_secrets(hass, auth_http, caplog):
     result = await start(hass)
-    assert result["step_id"] == "user"
+    assert result["step_id"] == "password"
     login_responses(auth_http, workspaces=[WORKSPACE, {**WORKSPACE, "id": "workspace-2"}])
     result = await hass.config_entries.flow.async_configure(result["flow_id"], LOGIN)
     assert result["step_id"] == "workspace"

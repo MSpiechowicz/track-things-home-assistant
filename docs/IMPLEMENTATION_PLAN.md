@@ -40,9 +40,11 @@ No global mutable account state or database connection belongs in the integratio
 
 ### Account and metadata
 
-- One existing password-authenticated account and workspace per config entry.
+- One existing account and workspace per config entry. Browser linking supports
+  Google and GitHub SSO; password login remains an advanced option.
   Multiple entries may represent other accounts/workspaces.
-- Setup collects backend URL and credentials, synchronizes the application user,
+- Normal setup uses the production backend and browser approval. Advanced setup
+  accepts a custom backend or password. Setup synchronizes the application user,
   and selects an accessible workspace. Exchange the password and discard it.
 - Store access/refresh tokens and expiry through config-entry storage, redact
   them from logs, serialize refreshes, and persist rotated tokens before reuse.

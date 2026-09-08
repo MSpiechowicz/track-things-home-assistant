@@ -1,16 +1,35 @@
 # Account setup and reauthentication
 
-Install the integration and restart Home Assistant. In Settings → Devices &
-services → Add integration, choose Track Things. Enter the backend HTTPS URL
-(including any deployment path prefix), email/username, and password. The flow
-exchanges the password, calls `POST /api/users/sync`, reads `GET /api/users/me`,
-and paginates accessible workspaces. Choose a workspace explicitly, including
-when only one is available. English and Polish forms are included in the package.
+Install the integration and restart Home Assistant. In **Settings → Devices &
+services → Add integration → Track Things**, choose **Connect with your Track
+Things account**. The integration automatically uses `https://api.track-things.com`.
+No backend URL or Track Things password is needed for this setup.
 
-For a disposable development backend only, enable “Allow HTTP for local
-development” and use localhost, a private IP, or a `.local` hostname. Public
-HTTP, URLs containing credentials, query parameters, and fragments are rejected
-before sending a password. HTTPS remains the default.
+1. Keep the Home Assistant setup window open and follow its Track Things link.
+2. Sign in using **Google, GitHub**, or your usual Track Things sign-in method.
+   Use the account that owns or has access to your workspace.
+3. Enter the code shown in Home Assistant. Confirm that it matches and approve
+   the connection you started. Codes expire after ten minutes.
+4. Return to Home Assistant and choose your workspace, even if only one is
+   available. English and Polish setup forms are included.
+
+The browser approval grants a separate Home Assistant session. Your provider
+password, OAuth client secret, and browser refresh token are never copied to HA.
+The connection can read accessible workspace resources and create entries using
+existing account permissions. Workspace selection controls this integration
+instance; the token can access other workspaces available to the same account.
+To revoke access, open **Account → Security → Manage Home Assistant connections**
+on Track Things, or visit `/connect/home-assistant`. Refresh the connection list
+if an approval has only just completed. Revocation invalidates both device tokens.
+Existing password-based entries keep working and use their existing reauth flow.
+
+**Advanced setup** offers a custom backend or a Track Things password login.
+SSO users do not need to create a password. Custom-server linking requires both
+the backend device endpoints and the corresponding frontend approval page; see
+[the backend deployment guide](https://github.com/MSpiechowicz/track-things-backend/blob/main/docs/HOME_ASSISTANT_LINKING.md).
+For a disposable development backend only, explicitly allow local HTTP. Public
+HTTP, URLs containing credentials, query parameters, and fragments are rejected.
+The backend operator configures the frontend approval URL.
 
 A config entry represents one normalized backend URL, account ID, and workspace
 ID. Repeating that combination aborts without replacing its credentials.
@@ -41,7 +60,7 @@ shared HTTP session open. Reload restores the latest saved credentials.
 Run from the repository's Python test environment:
 
 ```sh
-python -m pytest -q tests/test_config_flow.py tests/test_auth.py tests/test_reauth.py tests/test_init.py
+python -m pytest -q tests/test_device_link.py tests/test_config_flow.py tests/test_auth.py tests/test_reauth.py tests/test_init.py
 python -m ruff check .
 python -m ruff format --check .
 python scripts/check_file_sizes.py
@@ -49,7 +68,7 @@ python -m pytest -q
 ```
 
 The offline fixture replay exercises the real Home Assistant flow manager and
-loader with mocked aiohttp responses: password exchange → user sync → profile →
+loader with mocked aiohttp responses: browser linking or password exchange → user sync → profile →
 workspace selection; expiry → one refresh → authenticated requests; revocation
 → reauthentication; wrong account rejection; outage → retry; and reload/unload.
 Synthetic sentinels check that logs, form responses, and persisted entry data do
@@ -58,10 +77,13 @@ not contain the password. No backend, Google speaker, or microphone is involved.
 The live acceptance walkthrough requires a disposable Home Assistant instance,
 a local test backend/Supabase, and disposable account credentials:
 
-1. Add the integration and select the test workspace; expect one loaded entry.
+1. Add the integration with Google, then repeat with GitHub on a separate test
+   account/workspace. Approve the displayed code and select the test workspace;
+   expect one loaded entry per setup. Verify denial and expired codes create no entry.
 2. Wait across token expiry and make an authenticated read; expect success
    without login and rotated credentials in config-entry storage.
-3. Revoke the refresh session, repeat the read, and complete reauthentication;
+3. Revoke the connection on the Track Things approval page, repeat the read,
+   and complete browser reauthentication;
    expect the same entry/account/workspace to reload.
 4. Stop the backend and restart HA; expect setup retry with entry data preserved.
    Restore the backend and verify recovery. Unload/reload the integration.

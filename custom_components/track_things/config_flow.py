@@ -1,4 +1,4 @@
-"""Password login, explicit workspace selection, and same-account reauthentication."""
+"""Browser linking, password login, workspace selection, and same-account reauthentication."""
 
 import json
 from typing import Any
@@ -18,6 +18,7 @@ from .api_errors import ApiError, AuthenticationError
 from .api_models import User, Workspace
 from .auth import AuthenticatedApi, normalize_backend_url, session_data
 from .const import DOMAIN
+from .device_link import DEFAULT_BACKEND_URL, DeviceLinkFlow
 from .options_flow import TrackerOptionsFlow
 
 LOGIN_FIELDS = {
@@ -26,7 +27,7 @@ LOGIN_FIELDS = {
 }
 
 
-class TrackThingsConfigFlow(ConfigFlow, domain=DOMAIN):
+class TrackThingsConfigFlow(DeviceLinkFlow, ConfigFlow, domain=DOMAIN):
     """Configure a backend/account/workspace instance without retaining passwords."""
 
     VERSION = 1
@@ -44,6 +45,9 @@ class TrackThingsConfigFlow(ConfigFlow, domain=DOMAIN):
     async def _login(self, user_input: dict[str, Any]) -> None:
         api = TrackThingsApi(self._data["backend_url"], async_get_clientsession(self.hass))
         credentials = await api.sign_in(user_input["identifier"], user_input["password"])
+        await self._load_credentials(credentials)
+
+    async def _load_credentials(self, credentials):
         self._data.update(session_data(credentials))
         client = AuthenticatedApi(
             self._data["backend_url"],
@@ -57,7 +61,39 @@ class TrackThingsConfigFlow(ConfigFlow, domain=DOMAIN):
             workspace["id"]: workspace async for workspace in client.iter_workspaces()
         }
 
-    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+    async def async_step_user(self, user_input=None):
+        return self.async_show_menu(step_id="user", menu_options=["link", "advanced"])
+
+    async def async_step_advanced(self, user_input=None):
+        return self.async_show_menu(step_id="advanced", menu_options=["custom_server", "password"])
+
+    async def async_step_custom_server(self, user_input=None):
+        errors = {}
+        if user_input is not None:
+            try:
+                self._data = {
+                    "backend_url": normalize_backend_url(
+                        user_input["backend_url"], user_input.get("allow_local_http", False)
+                    ),
+                    "allow_local_http": user_input.get("allow_local_http", False),
+                }
+                return await self.async_step_link()
+            except ValueError:
+                errors["base"] = "invalid_url"
+        return self.async_show_form(
+            step_id="custom_server",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("backend_url", default=DEFAULT_BACKEND_URL): str,
+                    vol.Optional("allow_local_http", default=False): bool,
+                }
+            ),
+            errors=errors,
+        )
+
+    async def async_step_password(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         errors = {}
         if user_input is not None:
             self._data = {}
@@ -81,10 +117,10 @@ class TrackThingsConfigFlow(ConfigFlow, domain=DOMAIN):
                 return await self.async_step_workspace()
             self._data = {}
         return self.async_show_form(
-            step_id="user",
+            step_id="password",
             data_schema=vol.Schema(
                 {
-                    vol.Required("backend_url"): str,
+                    vol.Required("backend_url", default=DEFAULT_BACKEND_URL): str,
                     **LOGIN_FIELDS,
                     vol.Optional("allow_local_http", default=False): bool,
                 }
@@ -125,7 +161,18 @@ class TrackThingsConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_reauth(self, entry_data: dict[str, Any]) -> ConfigFlowResult:
+        if entry_data.get("auth_method") == "device":
+            self._data = {
+                "backend_url": entry_data["backend_url"],
+                "allow_local_http": entry_data.get("allow_local_http", False),
+            }
+            return await self.async_step_reauth_link()
         return await self.async_step_reauth_confirm()
+
+    async def async_step_reauth_link(self, user_input=None):
+        if user_input is not None:
+            return await self.async_step_link()
+        return self.async_show_form(step_id="reauth_link", data_schema=vol.Schema({}))
 
     async def async_step_reauth_confirm(
         self, user_input: dict[str, Any] | None = None

@@ -77,6 +77,9 @@ for this check. Use `python -m ruff format .` to format changed Python files.
 ## Disposable-instance smoke test
 
 Add Track Things through Settings → Devices & services → Add integration.
+Choose the account connection option and sign in with Google, GitHub, or your
+usual method in the browser. The production backend URL is automatic. See
+[account setup](docs/ACCOUNT_SETUP.md) for approval, revocation, and advanced setup.
 Empty YAML remains a development-only loading check and takes no account
 settings. Do not put tokens or passwords in YAML.
 
@@ -108,7 +111,7 @@ cover authenticated config-entry setup/reload/unload.
 - Read the recorded-entry calendar, including multi-day entries.
 - Add entries using existing tracker schemas, with subject/detail clarification
   and confirmation through English and Polish Home Assistant Assist pipelines.
-- Use one password-authenticated Track Things account/workspace per instance.
+- Use one Track Things account/workspace per instance, including Google and GitHub SSO.
 - Offer Google Home fixed-script shortcuts and configured-speaker summaries.
 
 Google Home shortcuts do not forward arbitrary speech or follow-up replies into

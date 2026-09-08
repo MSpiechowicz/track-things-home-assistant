@@ -4,12 +4,9 @@
     "step": {
       "user": {
         "title": "Connect Track Things",
-        "description": "Sign in to one Track Things account. HTTPS is required; enable local HTTP only for a development backend on your local network.",
-        "data": {
-          "backend_url": "Backend URL",
-          "identifier": "Email or username",
-          "password": "Password",
-          "allow_local_http": "Allow HTTP for local development"
+        "menu_options": {
+          "link": "Connect with your Track Things account",
+          "advanced": "Advanced setup"
         }
       },
       "workspace": {
@@ -26,6 +23,34 @@
           "identifier": "Email or username",
           "password": "Password"
         }
+      },
+      "password": {
+        "title": "Connect Track Things",
+        "description": "Sign in to one Track Things account. HTTPS is required; enable local HTTP only for a development backend on your local network.",
+        "data": {
+          "backend_url": "Backend URL",
+          "identifier": "Email or username",
+          "password": "Password",
+          "allow_local_http": "Allow HTTP for local development"
+        }
+      },
+      "advanced": {
+        "title": "Advanced setup",
+        "menu_options": {
+          "custom_server": "Connect to a custom server",
+          "password": "Use a Track Things password"
+        }
+      },
+      "custom_server": {
+        "title": "Custom server",
+        "data": {
+          "backend_url": "Backend URL",
+          "allow_local_http": "Allow HTTP for local development"
+        }
+      },
+      "reauth_link": {
+        "title": "Reconnect Track Things",
+        "description": "Sign in with the original account in your browser to restore this connection."
       }
     },
     "error": {
@@ -39,7 +64,15 @@
     "abort": {
       "already_configured": "This backend, account, and workspace are already configured.",
       "no_workspaces": "This account has no accessible workspaces.",
-      "reauth_successful": "Authentication was successful."
+      "reauth_successful": "Authentication was successful.",
+      "cannot_connect": "Cannot connect to Track Things. Please try again.",
+      "link_denied": "You denied the connection.",
+      "link_expired": "The code expired or was already used. Start setup again.",
+      "wrong_account": "Sign in with the account originally used for this integration.",
+      "workspace_unavailable": "This account no longer has access to the configured workspace."
+    },
+    "progress": {
+      "linking": "Open [Track Things]({verification_url}), sign in with Google, GitHub or your usual method, and enter **{user_code}**. Approve only if the code matches. Keep this window open."
     }
   },
   "options": {

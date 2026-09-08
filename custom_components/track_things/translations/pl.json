@@ -4,12 +4,9 @@
     "step": {
       "user": {
         "title": "Połącz z Track Things",
-        "description": "Zaloguj się na jedno konto Track Things. Wymagany jest HTTPS; HTTP włączaj tylko dla serwera deweloperskiego w sieci lokalnej.",
-        "data": {
-          "backend_url": "Adres URL serwera",
-          "identifier": "E-mail lub nazwa użytkownika",
-          "password": "Hasło",
-          "allow_local_http": "Zezwól na HTTP w lokalnym środowisku deweloperskim"
+        "menu_options": {
+          "link": "Połącz ze swoim kontem Track Things",
+          "advanced": "Konfiguracja zaawansowana"
         }
       },
       "workspace": {
@@ -26,6 +23,34 @@
           "identifier": "E-mail lub nazwa użytkownika",
           "password": "Hasło"
         }
+      },
+      "password": {
+        "title": "Połącz z Track Things",
+        "description": "Zaloguj się na jedno konto Track Things. Wymagany jest HTTPS; HTTP włączaj tylko dla serwera deweloperskiego w sieci lokalnej.",
+        "data": {
+          "backend_url": "Adres URL serwera",
+          "identifier": "E-mail lub nazwa użytkownika",
+          "password": "Hasło",
+          "allow_local_http": "Zezwól na HTTP w lokalnym środowisku deweloperskim"
+        }
+      },
+      "advanced": {
+        "title": "Konfiguracja zaawansowana",
+        "menu_options": {
+          "custom_server": "Połącz z własnym serwerem",
+          "password": "Użyj hasła Track Things"
+        }
+      },
+      "custom_server": {
+        "title": "Własny serwer",
+        "data": {
+          "backend_url": "Adres URL serwera",
+          "allow_local_http": "Zezwól na HTTP w lokalnym środowisku deweloperskim"
+        }
+      },
+      "reauth_link": {
+        "title": "Połącz ponownie z Track Things",
+        "description": "Zaloguj się na pierwotne konto w przeglądarce, aby przywrócić to połączenie."
       }
     },
     "error": {
@@ -39,7 +64,15 @@
     "abort": {
       "already_configured": "Ten serwer, konto i przestrzeń robocza są już skonfigurowane.",
       "no_workspaces": "To konto nie ma dostępnych przestrzeni roboczych.",
-      "reauth_successful": "Uwierzytelnienie powiodło się."
+      "reauth_successful": "Uwierzytelnienie powiodło się.",
+      "cannot_connect": "Nie można połączyć się z Track Things. Spróbuj ponownie.",
+      "link_denied": "Połączenie zostało odrzucone.",
+      "link_expired": "Kod wygasł lub został już użyty. Rozpocznij konfigurację ponownie.",
+      "wrong_account": "Zaloguj się na konto pierwotnie użyte w tej integracji.",
+      "workspace_unavailable": "To konto nie ma już dostępu do skonfigurowanej przestrzeni roboczej."
+    },
+    "progress": {
+      "linking": "Otwórz [Track Things]({verification_url}), zaloguj się przez Google, GitHub lub swoją zwykłą metodą i wpisz **{user_code}**. Zatwierdź tylko wtedy, gdy kod jest zgodny. Pozostaw to okno otwarte."
     }
   },
   "options": {
