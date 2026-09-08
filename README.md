@@ -8,6 +8,7 @@ are available in the integration UI, along with tracker selection and five-minut
 metadata discovery. See the [metadata guide](docs/METADATA.md). A read-only
 workspace calendar is available in Home Assistant; see the [calendar guide](docs/CALENDAR.md).
 Daily-calendar and refresh actions are available; see the [action guide](docs/CALENDAR_ACTIONS.md).
+Manual entry creation is available through the [create-entry action](docs/CREATE_ENTRY_ACTION.md).
 Voice commands remain planned and are **not available yet**.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the
