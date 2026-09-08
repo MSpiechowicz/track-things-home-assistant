@@ -1,0 +1,79 @@
+blueprint:
+  name: Track Things daily summary
+  description: >-
+    Read today's recorded-entry summary on a fixed speaker. Create a script from
+    this blueprint and expose only that script to Google Home. Google does not
+    supply speaker identity, arbitrary speech, or follow-up answers to this script.
+  domain: script
+  homeassistant:
+    min_version: "2026.9.0"
+  input:
+    config_entry_id:
+      name: Track Things account instance
+      selector:
+        config_entry:
+          integration: track_things
+    tts_entity:
+      name: Text-to-speech entity
+      selector:
+        entity:
+          filter:
+            - domain: tts
+    output_speaker:
+      name: Fixed output speaker
+      description: Always plays here, regardless of where the Google command starts.
+      selector:
+        entity:
+          filter:
+            - domain: media_player
+    summary_language:
+      name: Summary language
+      default: en
+      selector:
+        select:
+          options:
+            - en
+            - pl
+    tts_language:
+      name: TTS language code
+      description: A code supported by your TTS provider for the summary language.
+      default: en
+      selector:
+        text:
+mode: single
+sequence:
+  - variables:
+      summary_language: !input summary_language
+      daily_calendar: null
+  - alias: Read today's calendar in Home Assistant's timezone
+    action: track_things.get_daily_calendar
+    data:
+      config_entry_id: !input config_entry_id
+      language: !input summary_language
+    response_variable: daily_calendar
+    continue_on_error: true
+  - if: >-
+      {{ daily_calendar is mapping and daily_calendar.summary is defined
+         and daily_calendar.summary is string
+         and daily_calendar.summary | trim | length > 0 }}
+    then:
+      - action: tts.speak
+        target:
+          entity_id: !input tts_entity
+        data:
+          media_player_entity_id: !input output_speaker
+          language: !input tts_language
+          message: "{{ daily_calendar.summary }}"
+    else:
+      - action: tts.speak
+        target:
+          entity_id: !input tts_entity
+        data:
+          media_player_entity_id: !input output_speaker
+          language: !input tts_language
+          message: >-
+            {{ 'Nie udało się pobrać kalendarza Track Things. Spróbuj ponownie później.'
+               if summary_language == 'pl'
+               else 'Unable to read the Track Things calendar. Please try again later.' }}
+      - stop: Track Things daily calendar failed; no calendar summary was available.
+        error: true

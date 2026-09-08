@@ -1,0 +1,11 @@
+# Merge into an existing manual Google Assistant configuration; do not duplicate
+# the google_assistant key. Keep your existing credentials/account-linking setup.
+google_assistant:
+  project_id: YOUR_EXISTING_PROJECT_ID
+  expose_by_default: false
+  entity_config:
+    script.track_things_daily_summary:
+      expose: true
+      name: Track Things daily summary
+# No other entities are exposed by this standalone example. If merging with an
+# existing configuration, review its other explicit exposure entries separately.
