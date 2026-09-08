@@ -27,6 +27,9 @@ value validation, conditional visibility, and explicit draft normalization.
 The [calendar mapping guide](docs/CALENDAR_MAPPING.md) documents historical event
 presentation, timezone overlap, and the offline fixture replay.
 
+The integration bundles the Track Things app icon in `brand/icon.png`, served
+locally by Home Assistant. Keep the `brand` directory when copying the integration.
+
 ## Development
 
 Use **Python 3.14.2 or newer**. The minimum Home Assistant version is **2026.9.0**.
