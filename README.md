@@ -1,15 +1,18 @@
 # Track Things for Home Assistant
 
 Custom integration scaffold for [Track Things](https://track-things.com).
-The repository provides loading/unloading, an asynchronous API client, a Home
-Assistant test harness, source-quality checks, and CI. Account setup, calendar entities, and voice commands
-are planned features and are **not available yet**.
+The repository provides loading/unloading, an asynchronous API client, pure
+dynamic-field validation, a Home Assistant test harness, source-quality checks,
+and CI. Account setup, calendar entities, and voice commands are planned features
+and are **not available yet**.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the
 [project board](https://github.com/users/MSpiechowicz/projects/4).
 
 The [API client guide](docs/API_CLIENT.md) documents resource methods, authentication,
 pagination, retries, errors, and offline verification.
+The [schema validation guide](docs/SCHEMA_VALIDATION.md) documents backend-compatible
+value validation, conditional visibility, and explicit draft normalization.
 
 ## Development
 

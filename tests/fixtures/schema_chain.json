@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "fields": [
+    {
+      "id": "transport-id",
+      "key": "transport_key",
+      "label": "Transport",
+      "type": "select",
+      "required": true,
+      "order": 9,
+      "options": [
+        {
+          "id": "train",
+          "label": "Train"
+        },
+        {
+          "id": "car",
+          "label": "Car"
+        }
+      ]
+    },
+    {
+      "id": "delay-id",
+      "key": "delay_key",
+      "label": "Was there a delay?",
+      "type": "boolean",
+      "required": true,
+      "order": 0,
+      "visibleWhen": {
+        "fieldId": "transport-id",
+        "operator": "equals",
+        "value": "train"
+      }
+    },
+    {
+      "id": "minutes-id",
+      "key": "minutes_key",
+      "label": "Delay minutes",
+      "type": "number",
+      "required": true,
+      "visibleWhen": {
+        "fieldId": "delay-id",
+        "operator": "equals",
+        "value": true
+      }
+    }
+  ]
+}
