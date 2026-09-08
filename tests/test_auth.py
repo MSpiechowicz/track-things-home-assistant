@@ -114,7 +114,7 @@ async def test_runtime_rotation_survives_reload(hass, config_entry, auth_http):
     assert config_entry.runtime_data.api.credentials == Session(**SESSION)
     setup_responses(auth_http)
     assert await hass.config_entries.async_reload(config_entry.entry_id)
-    assert auth_http.request.call_count == 9
+    assert auth_http.request.call_count == 11  # Includes the calendar read on each setup
     assert await hass.config_entries.async_unload(config_entry.entry_id)
 
 

@@ -2,6 +2,7 @@
 
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -10,6 +11,7 @@ from homeassistant.helpers.typing import ConfigType
 from .api_decode import decode_session
 from .api_errors import ApiError, AuthenticationError, NotFoundError, PermissionDeniedError
 from .auth import AuthenticatedApi, normalize_backend_url, session_data
+from .calendar_query import CalendarQuery
 from .const import DOMAIN
 from .coordinator import MetadataCoordinator, TrackThingsRuntime
 
@@ -51,15 +53,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: TrackThingsConfigEntry) 
         client.close()
         await coordinator.async_shutdown()
         raise
-    entry.runtime_data = TrackThingsRuntime(client, coordinator)
-    # Keep discovery polling before entity platforms are installed.
-    entry.async_on_unload(coordinator.async_add_listener(lambda: None))
+    entry.runtime_data = TrackThingsRuntime(client, coordinator, CalendarQuery(coordinator))
     entry.async_on_unload(entry.add_update_listener(async_options_updated))
+    await hass.config_entries.async_forward_entry_setups(entry, [Platform.CALENDAR])
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: TrackThingsConfigEntry) -> bool:
     """Disable the client without closing HA's shared session or retaining tasks."""
+    if not await hass.config_entries.async_unload_platforms(entry, [Platform.CALENDAR]):
+        return False
+    entry.runtime_data.calendar.invalidate()
     await entry.runtime_data.coordinator.async_shutdown()
     entry.runtime_data.api.close()
     return True

@@ -20,6 +20,10 @@ YAML enables development smoke testing without account credentials.
 adds account/workspace configuration, serialized session rotation, runtime
 setup/unload, and same-account reauthentication. See [account setup](ACCOUNT_SETUP.md).
 
+[Issue #11](https://github.com/MSpiechowicz/track-things-home-assistant/issues/11)
+adds the read-only workspace calendar, paginated range reads, current/next-event
+state, and a 60-second cache. See [calendar behavior and verification](CALENDAR.md).
+
 Baseline: Home Assistant 2026.9.0 and Python 3.14.2+. CI tests the baseline and the
 latest stable compatible custom-component harness. Handwritten source/test files
 must stay at or below 500 physical lines. See the README for exact check commands.
