@@ -43,6 +43,9 @@ A failed metadata refresh raises an action error. Calendar listeners refresh
 the entity independently; this response confirms metadata refresh, not the
 completion of every subsequent calendar request.
 
+For a fixed-speaker Google routine, use the
+[daily-summary script blueprint](GOOGLE_DAILY_SUMMARY.md).
+
 ## Verification
 
 Run with the repository test environment:
