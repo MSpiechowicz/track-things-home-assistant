@@ -170,3 +170,5 @@ review, and explicit revision-bound confirmation. See
 ## License
 
 GPL-3.0-only; see [LICENSE](LICENSE).
+
+Name-based recording and voice-adapter discovery are documented in the [name-based action guide](docs/NAME_BASED_ACTIONS.md).

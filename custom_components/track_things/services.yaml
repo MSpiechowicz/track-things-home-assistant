@@ -101,3 +101,60 @@ create_entry:
       description: Reuse for identical retries. Omit to generate a UUID; returned with the entry.
       selector:
         text:
+get_recording_options:
+  name: Get recording options
+  description: Discover available tracker and subject names, field labels, types, constraints and choice labels before recording. Never guess ambiguous names.
+  fields:
+    config_entry_id:
+      name: Account instance
+      required: true
+      selector:
+        config_entry:
+          integration: track_things
+record_entry:
+  name: Record entry by name
+  description: Record using tracker and subject names. Use field and value for a simple entry or values for multiple fields. Discover names with Get recording options. Ambiguous names require clarification.
+  fields:
+    config_entry_id:
+      name: Account instance
+      required: true
+      selector:
+        config_entry:
+          integration: track_things
+    tracker:
+      name: Tracker
+      description: Exact tracker name, such as Health check-in. A unique ID is also accepted.
+      required: true
+      selector:
+        text:
+    subject:
+      name: Subject
+      description: Assigned subject name, such as Barbara. A unique ID is also accepted.
+      required: true
+      selector:
+        text:
+    field:
+      name: Field
+      description: Field label, such as Wellbeing. Optional when the tracker has only one field.
+      selector:
+        text:
+    value:
+      name: Value
+      description: A typed value such as 3, true, or a choice label. Use YAML mode for a typed scalar; do not wrap it in an object.
+      selector:
+        object:
+    values:
+      name: Multiple field values
+      description: Map field labels or keys to typed values. Use instead of Field and Value.
+      selector:
+        object:
+    occurred_at:
+      name: Recorded at
+      description: Defaults to now. For retries, reuse the original timezone-qualified timestamp.
+      selector:
+        text:
+    request_id:
+      name: Request ID
+      description: For retries only. Reuse the original request ID, timestamp and identical data.
+      selector:
+        text:
