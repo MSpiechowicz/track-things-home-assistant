@@ -1,5 +1,17 @@
 # Track Things Home Assistant implementation plan
 
+## Conversation direction update (2026-09-08)
+
+The current product direction supports two paths: deterministic readable questions
+and an experimental Google Assistant/Gemini integration. The local question path
+supports English, Polish, German, and French and can offer explicit schema defaults
+before review and confirmation. It no longer waits for a single-engine selection.
+Both paths share deterministic draft validation and confirmation; the Google
+speaker transport still requires feasibility evidence in #25. This update
+supersedes earlier single-engine and two-language constraints below.
+See [the adapter contract and replay](CONVERSATION_ADAPTER.md). Production runtime
+wiring, backend submission and the Google experiment remain separate increments.
+
 ## Goal and current increment
 
 Read Track Things' recorded-entry calendar and create entries through guided

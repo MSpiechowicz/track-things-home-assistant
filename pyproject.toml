@@ -7,6 +7,7 @@ name = "track-things-home-assistant"
 version = "0.14.0"
 description = "Home Assistant custom integration for Track Things"
 readme = "README.md"
+dependencies = ["hassil==3.12.0"]
 requires-python = ">=3.14.2"
 license = "GPL-3.0-only"
 
