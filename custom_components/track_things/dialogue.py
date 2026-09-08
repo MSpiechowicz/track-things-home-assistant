@@ -15,6 +15,7 @@ from .dialogue_models import (
     DraftMetadata,
     DraftPatch,
     DraftResult,
+    DraftView,
     SubmissionIntent,
 )
 from .dialogue_rules import (
@@ -162,6 +163,11 @@ class DraftStore:
     def inspect(self, draft_id: str) -> DraftResult:
         """Read without extending inactivity (polling must not keep drafts alive)."""
         return self._result(draft_id, self._get(draft_id))
+
+    def view(self, draft_id: str) -> DraftView:
+        """Expose validated answers for parsing without extending inactivity."""
+        draft = self._get(draft_id)
+        return deepcopy(DraftView(draft.metadata, draft.tracker_id, draft.values))
 
     def review(self, draft_id: str) -> DraftResult:
         """Explicit review may omit unanswered optional fields, never required ones."""

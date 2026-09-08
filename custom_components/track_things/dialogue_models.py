@@ -55,6 +55,15 @@ class DraftResult:
 
 
 @dataclass(frozen=True, repr=False)
+class DraftView:
+    """Detached parsing context; callers cannot mutate the stored draft."""
+
+    metadata: DraftMetadata
+    tracker_id: str | None
+    values: dict[str, Any]
+
+
+@dataclass(frozen=True, repr=False)
 class SubmissionIntent:
     """A single confirmed handoff. The consumer still owns safe backend saving."""
 

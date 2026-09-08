@@ -15,7 +15,9 @@ A [Google Home fixed-entry shortcut](docs/GOOGLE_FIXED_ENTRY.md) records configu
 values with a stable request ID across its retry; real-device verification remains pending.
 An offline [guided-question adapter](docs/CONVERSATION_ADAPTER.md) supports English,
 Polish, German, and French, including explicit default-detail proposals.
-Full conversational voice commands remain planned and are **not available yet**.
+A selectable [Track Things Assist agent](docs/ASSIST_CONVERSATION.md) guides
+those drafts through questions and review. Saving and calendar conversation
+dispatch are not available yet. Live voice/device verification remains pending.
 
 See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the
 [project board](https://github.com/users/MSpiechowicz/projects/4).

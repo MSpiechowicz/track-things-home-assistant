@@ -117,8 +117,12 @@ same confirmed submission. User-authored entries use `source: manual`.
 
 ### Local voice dialogue
 
-Use a dedicated `ConversationEntity` with `_async_handle_message`, ChatLog,
-conversation IDs, and `continue_conversation`. Configure English and Polish Assist
+Use a dedicated `ConversationEntity` with conversation IDs and
+`continue_conversation`. The [implemented local runtime](ASSIST_CONVERSATION.md)
+overrides `async_process` to own ephemeral, context-scoped drafts without retaining
+an additional ChatLog. It reaches review; backend saving and calendar dispatch
+remain separate increments. Live voice testing is deferred by the owner.
+Configure English and Polish Assist
 pipelines; Home Assistant supplies speech recognition/playback. Use Hassil
 templates with dynamic names/aliases and typed parsers, not an LLM.
 

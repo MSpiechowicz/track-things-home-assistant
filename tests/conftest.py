@@ -14,6 +14,14 @@ def custom_integrations(enable_custom_integrations):
     """Allow Home Assistant's loader to discover this repository's component."""
 
 
+@pytest.fixture(autouse=True)
+async def core_setup(hass):
+    """Conversation's default agent needs HA's real exposed-entity registry."""
+    from homeassistant.setup import async_setup_component
+
+    assert await async_setup_component(hass, "homeassistant", {})
+
+
 @pytest.fixture
 async def config_entry(hass: HomeAssistant) -> AsyncIterator[MockConfigEntry]:
     """A synthetic account entry exercises the real config flow and lifecycle."""
