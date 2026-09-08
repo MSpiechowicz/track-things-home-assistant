@@ -12,6 +12,7 @@ from zoneinfo import ZoneInfo
 from homeassistant.components.calendar import CalendarEvent
 
 from .api_errors import InvalidResponseError
+from .api_models import Entry
 from .calendar_mapping import calendar_event_overlaps, entry_to_calendar_event
 from .coordinator import CONF_TRACKER_IDS
 
@@ -31,7 +32,9 @@ class CalendarQuery:
         self.coordinator = coordinator
         self._clock = clock or (lambda: monotonic())
         self._generation = 0
-        self._cache: OrderedDict[tuple, tuple[float, list[CalendarEvent]]] = OrderedDict()
+        self._cache: OrderedDict[tuple, tuple[float, list[tuple[Entry, CalendarEvent]]]] = (
+            OrderedDict()
+        )
         self._lock = asyncio.Lock()
 
     def invalidate(self) -> None:
@@ -42,6 +45,12 @@ class CalendarQuery:
     async def async_get_events(
         self, start: datetime, end: datetime, time_zone: str
     ) -> list[CalendarEvent]:
+        return [event for _, event in await self.async_get_records(start, end, time_zone)]
+
+    async def async_get_records(
+        self, start: datetime, end: datetime, time_zone: str
+    ) -> list[tuple[Entry, CalendarEvent]]:
+        """Return complete entries and their display events from the shared range cache."""
         if start.utcoffset() is None or end.utcoffset() is None:
             raise ValueError("Calendar query timestamps must include a timezone")
         start, end = start.astimezone(UTC), end.astimezone(UTC)
@@ -80,15 +89,15 @@ class CalendarQuery:
                 break
         return deepcopy(
             [
-                event
-                for event in events
+                (entry, event)
+                for entry, event in events
                 if calendar_event_overlaps(event, start, end, time_zone=zone)
             ]
         )
 
     async def _async_read(
         self, first: str, last: str, time_zone: str, selection: tuple[str, ...] | None
-    ) -> list[CalendarEvent]:
+    ) -> list[tuple[Entry, CalendarEvent]]:
         if selection == ():
             return []
         store = self.coordinator.store
@@ -104,18 +113,21 @@ class CalendarQuery:
                 continue
             seen.add(entry["id"])
             events.append(
-                entry_to_calendar_event(
+                (
                     entry,
-                    await store.async_schema(entry["trackerId"], entry["schemaVersionId"]),
-                    tracker=await store.async_tracker(entry["trackerId"]),
-                    subject=await store.async_subject(entry["subjectId"]),
+                    entry_to_calendar_event(
+                        entry,
+                        await store.async_schema(entry["trackerId"], entry["schemaVersionId"]),
+                        tracker=await store.async_tracker(entry["trackerId"]),
+                        subject=await store.async_subject(entry["subjectId"]),
+                    ),
                 )
             )
         events.sort(
             key=lambda event: (
-                event.start_datetime_local.astimezone(UTC),
-                event.end_datetime_local.astimezone(UTC),
-                event.uid or "",
+                event[1].start_datetime_local.astimezone(UTC),
+                event[1].end_datetime_local.astimezone(UTC),
+                event[1].uid or "",
             )
         )
         return events

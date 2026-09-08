@@ -1,0 +1,43 @@
+get_daily_calendar:
+  name: Get daily calendar
+  description: Return complete recorded entries and an English or Polish summary for a local day.
+  fields:
+    config_entry_id:
+      name: Account instance
+      required: true
+      selector:
+        config_entry:
+          integration: track_things
+    date:
+      name: Date
+      description: Defaults to today in the Home Assistant timezone.
+      selector:
+        date:
+    trackerId:
+      name: Tracker ID
+      description: Optional tracker belonging to this instance and its selected trackers.
+      selector:
+        text:
+    subjectId:
+      name: Subject ID
+      description: Optional recorded subject belonging to this workspace, including archived subjects.
+      selector:
+        text:
+    language:
+      name: Summary language
+      default: en
+      selector:
+        select:
+          options:
+            - en
+            - pl
+refresh:
+  name: Refresh
+  description: Refresh workspace metadata and invalidate cached calendar ranges.
+  fields:
+    config_entry_id:
+      name: Account instance
+      required: true
+      selector:
+        config_entry:
+          integration: track_things
