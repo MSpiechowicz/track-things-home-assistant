@@ -9,6 +9,11 @@ from .dialogue import DraftPatch
 INSTRUCTIONS = """Interpret the utterance using the supplied catalog and draft context.
 Return ONLY one JSON object with action: create, patch, review, cancel, repeat,
 calendar, more, or clarify. No commands, prose or Markdown.
+Optional workspace_name: copy ONLY a workspace explicitly named by the user.
+Otherwise omit workspace_name; the application selects unique matches, applies
+its configured preference, or asks for clarification. Search ALL supplied workspaces.
+Use tracker_name and subject_name when matching across workspaces, not IDs from
+an arbitrary workspace. An active draft cannot change workspace; preserve its scope.
 Optional fields for create/patch: tracker_name, subject_name (exact catalog names),
 or tracker_id, subject_id,
 values (object of schema keys to typed values), remove (array of schema keys),

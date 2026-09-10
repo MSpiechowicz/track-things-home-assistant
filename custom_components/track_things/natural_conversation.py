@@ -16,6 +16,7 @@ from .conversation import TrackThingsConversation
 from .conversation_contract import Clarification, Proposal
 from .conversation_responses import MESSAGES
 from .natural_proposal import INSTRUCTIONS, control, decode_proposal
+from .workspace_routing import CONF_PREFERRED, WorkspaceChoice, connected, matches, unpack
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,6 +31,60 @@ class NaturalConversation(TrackThingsConversation):
         super().__init__(entry)
         self._attr_unique_id = f"{entry.entry_id}_natural_conversation"
         self._natural_lock = asyncio.Lock()
+        self._workspace_engines = {}
+        self._workspace_routes = {}
+        self._workspace_choices = {}
+
+    def _engine(self, entry):
+        if entry.entry_id == self.entry.entry_id:
+            return self
+        if entry.entry_id not in self._workspace_engines:
+            engine = TrackThingsConversation(entry)
+            engine.hass = self.hass
+            engine.natural_review = True
+            self._workspace_engines[entry.entry_id] = engine
+        return self._workspace_engines[entry.entry_id]
+
+    def _expire(self, now=None):
+        super()._expire(now)
+        for engine in self._workspace_engines.values():
+            engine._expire(now)
+        for key, entry_id in tuple(self._workspace_routes.items()):
+            engine = (
+                self if entry_id == self.entry.entry_id else self._workspace_engines.get(entry_id)
+            )
+            if engine is None or (
+                key not in engine._sessions and key not in engine.calendar.sessions
+            ):
+                del self._workspace_routes[key]
+        for key, choice in tuple(self._workspace_choices.items()):
+            if choice.expired():
+                del self._workspace_choices[key]
+
+    async def async_will_remove_from_hass(self):
+        await super().async_will_remove_from_hass()
+        for engine in self._workspace_engines.values():
+            engine._closed = True
+            engine.drafts.clear()
+            engine._sessions.clear()
+            engine.calendar.sessions.clear()
+        self._workspace_routes.clear()
+        self._workspace_choices.clear()
+
+    async def _apply_workspace(self, user_input, key, entry, proposal, review):
+        engine = self._engine(entry)
+        result = await engine._process(user_input, proposal)
+        spoken = result.response.speech["plain"]["speech"]
+        if review and not spoken.startswith(MESSAGES["en"]["recovery"]):
+            result = await engine._process(user_input, Proposal("review"))
+        if key in engine._sessions or key in engine.calendar.sessions:
+            self._workspace_routes[key] = entry.entry_id
+        else:
+            self._workspace_routes.pop(key, None)
+        result.response.async_set_speech(
+            f"Workspace {entry.title}. " + result.response.speech["plain"]["speech"]
+        )
+        return result
 
     @property
     def supported_languages(self):
@@ -79,27 +134,90 @@ class NaturalConversation(TrackThingsConversation):
                 user_input.satellite_id,
                 "en",
             )
-            session = self._sessions.get(key)
+            entries = connected(self.hass, self.entry)
+            current = self._workspace_routes.get(key)
+            if current and current not in entries:
+                return self._reply(
+                    user_input,
+                    "The draft workspace is unavailable. Restore its connection before continuing.",
+                )
+            engine = self._engine(entries[current]) if current else self
+            session = engine._sessions.get(key)
+            if current and not session and key not in engine.calendar.sessions:
+                self._workspace_routes.pop(key, None)
+                current = None
+                engine = self
+            choice = self._workspace_choices.get(key)
             literal = control(user_input.text)
+            if choice:
+                if literal == "cancel":
+                    del self._workspace_choices[key]
+                    return self._reply(user_input, "Cancelled. Nothing was saved.")
+                selected = [
+                    entry
+                    for entry_id, entry in entries.items()
+                    if entry_id in choice.candidates and entry.title.casefold() == literal
+                ]
+                if len(selected) != 1:
+                    return self._reply(
+                        user_input,
+                        "Choose a workspace: "
+                        + ", ".join(entries[k].title for k in choice.candidates if k in entries),
+                        True,
+                    )
+                try:
+                    metadata = await self._engine(selected[0])._metadata()
+                    proposal, review = decode_proposal(json.dumps(choice.data), metadata)
+                except ApiError, Clarification, ValueError, KeyError, TypeError:
+                    del self._workspace_choices[key]
+                    return self._reply(
+                        user_input, "The workspace or tracker changed. Please start again."
+                    )
+                del self._workspace_choices[key]
+                return await self._apply_workspace(user_input, key, selected[0], proposal, review)
             # Original confirmation is never generated or paraphrased by Gemini.
             if literal in {"confirm", "save", "cancel", "repeat", "review"} or (
                 session and session.pending
             ):
-                return await super().async_process(
-                    replace(
-                        user_input,
-                        text=("/" if user_input.text.strip().startswith("/") else "") + literal,
-                    )
+                normalized = replace(
+                    user_input,
+                    text=("/" if user_input.text.strip().startswith("/") else "") + literal,
                 )
+                result = await engine._process(normalized)
+                if current and key not in engine._sessions and key not in engine.calendar.sessions:
+                    self._workspace_routes.pop(key, None)
+                if current:
+                    result.response.async_set_speech(
+                        f"Workspace {entries[current].title}. "
+                        + result.response.speech["plain"]["speech"]
+                    )
+                return result
             stage = "interpreter_setup"
             try:
                 gemini_id = self._gemini()
                 stage = "metadata"
-                metadata = await self._metadata()
+                if not entries:
+                    raise ValueError("no_workspaces")
+                catalogs = {
+                    entry_id: await self._engine(entry)._metadata()
+                    for entry_id, entry in entries.items()
+                    if not current or entry_id == current
+                }
+                metadata = catalogs[current] if current else next(iter(catalogs.values()))
                 catalog = {
-                    "trackers": metadata.trackers,
-                    "subjects": metadata.subjects,
-                    "schemas": metadata.schemas,
+                    "workspaces": [
+                        {
+                            "workspace_name": entries[k].title,
+                            "trackers": m.trackers,
+                            "subjects": m.subjects,
+                            "schemas": m.schemas,
+                        }
+                        for k, m in catalogs.items()
+                    ],
+                    "active_workspace": entries[current].title if current else None,
+                    "trackers": metadata.trackers if len(catalogs) == 1 else {},
+                    "subjects": metadata.subjects if len(catalogs) == 1 else {},
+                    "schemas": metadata.schemas if len(catalogs) == 1 else {},
                     "current_question": session.last_speech if session else None,
                     "utterance": user_input.text,
                     "now": dt_util.now().isoformat(),
@@ -107,8 +225,8 @@ class NaturalConversation(TrackThingsConversation):
                     "draft": None
                     if session is None
                     else {
-                        "tracker_id": self.drafts.view(session.draft_id).tracker_id,
-                        "values": self.drafts.view(session.draft_id).values,
+                        "tracker_id": engine.drafts.view(session.draft_id).tracker_id,
+                        "values": engine.drafts.view(session.draft_id).values,
                     },
                 }
                 stage = "provider"
@@ -125,11 +243,37 @@ class NaturalConversation(TrackThingsConversation):
                 if result.response.error_code:
                     raise ValueError("model_error")
                 stage = "proposal"
-                proposal, request_review = decode_proposal(
-                    result.response.speech["plain"]["speech"],
-                    metadata,
-                    self.drafts.view(session.draft_id).tracker_id if session else None,
-                )
+                data, workspace = unpack(result.response.speech["plain"]["speech"])
+                if current:
+                    if workspace and workspace.casefold() != entries[current].title.casefold():
+                        return self._reply(
+                            user_input, "Cancel the current draft before changing workspace.", True
+                        )
+                    proposal, request_review = decode_proposal(
+                        json.dumps(data),
+                        metadata,
+                        engine.drafts.view(session.draft_id).tracker_id if session else None,
+                    )
+                    selected_entry = entries[current]
+                else:
+                    decode_proposal(json.dumps(data))  # Validate structure before routing.
+                    candidates = matches(
+                        data, workspace, entries, catalogs, self.entry.options.get(CONF_PREFERRED)
+                    )
+                    if not candidates:
+                        raise ValueError("clarify")
+                    if len(candidates) > 1:
+                        self._workspace_choices[key] = WorkspaceChoice.new(data, candidates)
+                        return self._reply(
+                            user_input,
+                            "Which workspace: "
+                            + ", ".join(entries[k].title for k in candidates)
+                            + "?",
+                            True,
+                        )
+                    selected_id = next(iter(candidates))
+                    selected_entry = entries[selected_id]
+                    proposal, request_review = candidates[selected_id]
             except (
                 ApiError,
                 Clarification,
@@ -151,8 +295,6 @@ class NaturalConversation(TrackThingsConversation):
                     "Please check the tracker name and who it is assigned to.",
                 }
                 return self._reply(user_input, messages[code], bool(session))
-            result = await self._process(user_input, proposal)
-            spoken = result.response.speech["plain"]["speech"]
-            if request_review and not spoken.startswith(MESSAGES["en"]["recovery"]):
-                result = await self._process(user_input, Proposal("review"))
-            return result
+            return await self._apply_workspace(
+                user_input, key, selected_entry, proposal, request_review
+            )

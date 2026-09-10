@@ -45,7 +45,11 @@ async def test_real_options_flow_keeps_runtime_and_schema_cache(hass, config_ent
     )
     assert result["type"] == "create_entry"
     await hass.async_block_till_done()
-    assert config_entry.options == {"tracker_ids": ["tracker-1"]}
+    assert config_entry.options == {
+        "tracker_ids": ["tracker-1"],
+        "voice_workspace_entries": [config_entry.entry_id],
+        "voice_preferred_workspace": "",
+    }
     assert config_entry.runtime_data is runtime
     assert auth_http.request.call_count == calls + 1
     assert auth_http.request.call_args.args[1].endswith("/entries")
