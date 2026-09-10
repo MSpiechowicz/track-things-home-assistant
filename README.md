@@ -10,7 +10,10 @@ workspace calendar is available in Home Assistant; see the [calendar guide](docs
 Daily-calendar and refresh actions are available; see the [action guide](docs/CALENDAR_ACTIONS.md).
 Manual entry creation is available through the [create-entry action](docs/CREATE_ENTRY_ACTION.md).
 A [Google Home daily-summary shortcut blueprint](docs/GOOGLE_DAILY_SUMMARY.md)
-is available for a configured fixed speaker; real-device verification remains pending.
+is available for a configured fixed speaker. Follow the
+[Google Home connection checklist](docs/GOOGLE_HOME_SETUP.md) for a plain-language
+walkthrough of speaker setup, speech testing, and Google voice activation. A live zero-entry
+summary POC passed; broader real-device acceptance remains pending.
 A [Google Home fixed-entry shortcut](docs/GOOGLE_FIXED_ENTRY.md) records configured
 values with a stable request ID across its retry; real-device verification remains pending.
 An offline [guided-question adapter](docs/CONVERSATION_ADAPTER.md) supports English,

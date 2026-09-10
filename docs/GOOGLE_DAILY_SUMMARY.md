@@ -1,5 +1,8 @@
 # Google Home daily-summary shortcut
 
+For first-time installation and speaker setup, follow the
+[Google Home connection checklist](GOOGLE_HOME_SETUP.md).
+
 Create a script from the shipped
 [daily-summary blueprint](../examples/blueprints/script/track_things/daily_summary.yaml).
 It calls `track_things.get_daily_calendar`, then `tts.speak` with the returned
@@ -147,10 +150,12 @@ Manual acceptance checklist for a disposable HA/backend setup:
    and verify a subsequent invocation succeeds.
 6. Review the Google exposure list to confirm no unintended scripts were added.
 
-Real Google routine invocation, account/device sync, and audible Nest playback
-have **not been verified** in the development environment. Automated results are
-not evidence of real-device acceptance. Keep the issue open until these checks
-have been recorded; do not claim a successful speaker test from mock services.
+A user-assisted live POC on 2026-09-10 confirmed audible TTS, an audible zero-entry
+summary, and Google voice activation of the shortcut. See the
+[setup guide verification record](GOOGLE_HOME_SETUP.md#setup-complete) for the
+environment and limits. Custom routines, populated-day and failure scenarios,
+and the full device matrix remain unverified. Automated results alone are not
+evidence of real-device acceptance; the broader checklist above remains pending.
 
 ## Official references
 
