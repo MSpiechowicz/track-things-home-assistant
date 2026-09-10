@@ -1,51 +1,187 @@
 # Track Things for Home Assistant
 
-Custom integration for [Track Things](https://track-things.com).
-The repository provides loading/unloading, an asynchronous API client, pure
-dynamic-field validation, pure calendar mapping, a Home Assistant test harness,
-source-quality checks, and CI. Account setup, workspace selection, and reauthentication
-are available in the integration UI, along with tracker selection and five-minute
-metadata discovery. See the [metadata guide](docs/METADATA.md). A read-only
-workspace calendar is available in Home Assistant; see the [calendar guide](docs/CALENDAR.md).
-Daily-calendar and refresh actions are available; see the [action guide](docs/CALENDAR_ACTIONS.md).
-Manual entry creation is available through the [create-entry action](docs/CREATE_ENTRY_ACTION.md).
-A [Google Home daily-summary shortcut blueprint](docs/GOOGLE_DAILY_SUMMARY.md)
-is available for a configured fixed speaker. Follow the
-[Google Home connection checklist](docs/GOOGLE_HOME_SETUP.md) for a plain-language
-walkthrough of speaker setup, speech testing, and Google voice activation. A live zero-entry
-summary POC passed; broader real-device acceptance remains pending.
-A [Google Home fixed-entry shortcut](docs/GOOGLE_FIXED_ENTRY.md) records configured
-values with a stable request ID across its retry; real-device verification remains pending.
-An offline [guided-question adapter](docs/CONVERSATION_ADAPTER.md) supports English,
-Polish, German, and French, including explicit default-detail proposals.
-An opt-in [Gemini natural-wording POC](docs/GEMINI_ASSIST.md) translates English
-requests while keeping deterministic validation and literal confirmation.
-A selectable [Track Things Assist agent](docs/ASSIST_CONVERSATION.md) guides
-those drafts through questions, review and confirmed saving.
-[Calendar questions](docs/CALENDAR_CONVERSATION.md) support localized dates,
-tracker/subject clarification and isolated five-entry pagination.
-Live voice/device verification remains pending.
-Downloadable [diagnostics and recovery guidance](docs/DIAGNOSTICS.md) cover
-sanitized health snapshots, backend outages, reauthentication, and safe restart.
+Connect your [Track Things](https://track-things.com) workspace to Home Assistant
+to browse recorded events, run entry-creation actions, and use guided Assist
+conversations to record information. This repository contains the custom Home
+Assistant integration.
 
-See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and the
-[project board](https://github.com/users/MSpiechowicz/projects/4).
+**Voice support requires additional setup. Google Home/Nest speakers connected
+to Home Assistant cannot carry the full Track Things conversation. For hands-free
+room use, you need a separate Assist-compatible voice device and configured
+speech services. Live voice-device verification remains pending.**
 
-The [account setup guide](docs/ACCOUNT_SETUP.md) documents HTTPS/local-development
-configuration, session storage, reauthentication, and verification.
+[Installation and connection](#connect-track-things-to-home-assistant) ·
+[Voice setup](#set-up-voice-separately) ·
+[Limitations](#current-bottlenecks-and-limitations) ·
+[Technical documentation](#technical-documentation)
 
-The [API client guide](docs/API_CLIENT.md) documents resource methods, authentication,
-pagination, retries, errors, and offline verification.
-The [schema validation guide](docs/SCHEMA_VALIDATION.md) documents backend-compatible
-value validation, conditional visibility, and explicit draft normalization.
+## What the integration provides
 
-The [calendar mapping guide](docs/CALENDAR_MAPPING.md) documents historical event
-presentation, timezone overlap, and the offline fixture replay.
+The Track Things integration lets Home Assistant read your recorded-entry calendar,
+answer calendar questions, and create entries in existing manual trackers.
+Through the **Track Things** Assist conversation agent, you can start a draft,
+answer questions about its subject and details, review the result, and explicitly
+confirm before it is saved. The guided conversation supports English, Polish, German,
+and French using supported phrases and step-by-step questions.
 
-The integration bundles the Track Things app icon in `brand/icon.png`, served
-locally by Home Assistant. Keep the `brand` directory when copying the integration.
+The integration also provides a read-only workspace calendar and actions for
+reading daily entries, refreshing data, and recording entries from automations.
+See the [calendar guide](docs/CALENDAR.md) and
+[entry-creation action guide](docs/CREATE_ENTRY_ACTION.md).
 
-## Development
+## Requirements
+
+- Home Assistant **2026.9.0 or newer**.
+- A Track Things account with access to the workspace you want to connect.
+- Existing trackers and assigned subjects (the people, pets, or things your
+  entries describe). Guided entry creation supports active manual trackers.
+- Network access from Home Assistant to the Track Things service.
+- For spoken conversations: a configured Assist voice pipeline and a compatible
+  microphone/speaker device. Calendar access and automation actions do not
+  require voice hardware.
+
+## Connect Track Things to Home Assistant
+
+1. Confirm that your Track Things account can access the workspace and trackers
+   you want to use in Home Assistant.
+2. Download the
+   [source of this repository](https://github.com/MSpiechowicz/track-things-home-assistant)
+   and copy its `custom_components/track_things` directory into your Home
+   Assistant configuration directory under `custom_components/track_things`.
+   Keep the bundled `brand` directory, then restart Home Assistant.
+3. In Home Assistant, open **Settings → Devices & services → Add integration →
+   Track Things**, then choose **Connect with your Track Things account**.
+4. Keep that setup window open, follow the Track Things link, and sign in with
+   Google, GitHub, or your usual sign-in method. Enter the code displayed in
+   Home Assistant and approve your connection; the code expires after ten minutes.
+5. Return to Home Assistant, select your workspace, and select the desired
+   trackers in the integration options. The standard connection uses the hosted
+   Track Things service automatically; you do not need to copy passwords or
+   access tokens into configuration files.
+6. Check that the workspace calendar is available before configuring voice.
+   You can revoke the connection later from **Account → Security → Manage Home
+   Assistant connections** in Track Things.
+
+See the [account setup guide](docs/ACCOUNT_SETUP.md)
+for complete connection and recovery instructions, including connecting to a
+custom server through **Advanced setup**.
+
+## Set up voice separately
+
+You need both a running Home Assistant instance and a way to speak directly to
+Assist. For hands-free room use, use a separate Assist-compatible microphone and
+speaker device, such as Home Assistant Voice Preview Edition or a supported
+ESPHome voice satellite. A Google Home/Nest speaker does not fill that role for
+this integration. You can also try Assist through the Home Assistant companion
+app on a phone, or test with text before buying dedicated hardware. See
+[Home Assistant's supported Assist options](https://www.home-assistant.io/voice_control/).
+
+A **voice pipeline** is the set of services that turns your speech into text,
+passes it to Track Things, and reads the reply aloud.
+
+1. In **Settings → Voice assistants**, add or edit a dedicated assistant and
+   select **Track Things** as its conversation agent. Disable **Prefer handling
+   commands locally** for this pipeline so replies reach the Track Things agent.
+2. Select a supported language and configure speech-to-text and text-to-speech
+   providers for it. Follow Home Assistant's
+   [local voice setup](https://www.home-assistant.io/voice_control/voice_remote_local_assistant/)
+   or [Home Assistant Cloud setup](https://www.home-assistant.io/voice_control/voice_remote_cloud_assistant/).
+   The standard guided Track Things assistant needs no Gemini key or AI
+   subscription; speech services have their own requirements and possible costs.
+3. Assign that assistant to your Assist-compatible voice device. Keep the same
+   assistant and conversation across follow-up answers.
+4. Test in Assist with text first: for a tracker named `Headache`, try
+   `log Headache`, answer the questions, use `review` to review the draft, then
+   `confirm` to save it. Verify the entry in the web app before testing the same
+   flow with your microphone and spoken replies.
+
+See the [Track Things Assist guide](docs/ASSIST_CONVERSATION.md)
+for languages, aliases, default subjects, and conversation controls.
+
+## Current bottlenecks and limitations
+
+```mermaid
+flowchart TD
+    Assist["Assist-compatible voice device"] --> Pipeline["Configured Home Assistant voice pipeline"]
+    Pipeline --> Agent["Track Things guided conversation<br/>Questions, review, confirmation"]
+    Google["Google Home / Nest speaker"] --> Shortcut["Predefined shortcut<br/>Experimental summary or fixed entry"]
+    Google -.-> Limit["No supported forwarding of free-form speech<br/>or follow-up replies to Track Things Assist"]
+```
+
+The Assist route is implemented and tested with automated text conversations;
+it is still awaiting end-to-end voice-device verification.
+
+- **Google Home + Home Assistant does not support the full Track Things voice
+  dialogue.** The current Google/Nest shortcut path does not forward arbitrary
+  speech or follow-up answers to the Track Things Assist agent. Linking Google
+  Home, exposing a script, or playing a spoken response does not bridge that gap.
+- **Google speaker support is limited to predefined shortcuts.** The integration
+  includes [daily-summary](docs/GOOGLE_DAILY_SUMMARY.md)
+  and [fixed-entry](docs/GOOGLE_FIXED_ENTRY.md)
+  experiments. A zero-entry summary proof of concept passed, but broader device
+  acceptance and fixed-entry real-device verification remain pending. These are
+  not interactive entry-creation conversations.
+- **Voice hardware and speech setup are additional work.** A running Home
+  Assistant server alone is insufficient for hands-free voice. You must provide
+  an Assist-compatible microphone/speaker device and working speech services.
+  Recognition quality, response time, and follow-up listening depend on that setup.
+- **End-to-end voice validation is still pending.** Automated text replays cover
+  guided questions and confirmed saves, but live microphone, speech-to-text,
+  text-to-speech, and follow-up listening checks remain deferred. Spoken controls
+  inside free-text answers also remain unverified.
+- **Voice writes use existing manual trackers.** Set up tracker fields and subjects
+  in the web app first. Trackers populated by integrations, calculated trackers,
+  and archived trackers cannot receive voice-created entries.
+- **A working service connection is required.** Local speech processing does not
+  make calendar queries or entry saving available offline.
+
+The integration is under active development. Treat the linked integration guides
+as the source of truth for supported behavior and verification status.
+
+## Technical documentation
+
+This section covers the integration's architecture, development, and maintenance.
+The installation steps above are sufficient for connecting an account; the
+following details are for integration contributors and maintainers.
+
+### Connection architecture
+
+The integration runs inside Home Assistant and calls the Track Things backend
+using an authenticated account connection. The backend validates and stores
+entries. Home Assistant owns audio capture, speech recognition, speech synthesis,
+and playback; the Track Things conversation agent receives text and returns
+replies and follow-up signals.
+
+```mermaid
+flowchart LR
+    Device["Assist audio device"] <--> Pipeline["Home Assistant voice pipeline<br/>Speech-to-text / text-to-speech"]
+    Pipeline <--> Agent["Track Things conversation agent<br/>Draft, questions, review"]
+    Agent --> Writer["Confirmed entry writer"]
+    Writer <--> API["Track Things backend API"]
+    Calendar["Workspace calendar and actions"] <--> API
+```
+
+Each configured integration entry selects an account and workspace. Tracker
+options control which trackers are available; metadata is refreshed every five
+minutes. Voice writes use selected active manual trackers with resolvable schemas
+and valid subject assignments. See [metadata discovery](docs/METADATA.md).
+
+### Feature and implementation guides
+
+| Area | Documentation |
+| --- | --- |
+| Account connection and recovery | [Account setup](docs/ACCOUNT_SETUP.md), [diagnostics](docs/DIAGNOSTICS.md) |
+| Calendar reads and questions | [Calendar](docs/CALENDAR.md), [calendar actions](docs/CALENDAR_ACTIONS.md), [calendar conversations](docs/CALENDAR_CONVERSATION.md) |
+| Entry creation and naming | [Create-entry action](docs/CREATE_ENTRY_ACTION.md), [name-based actions](docs/NAME_BASED_ACTIONS.md) |
+| Guided conversations | [Assist setup](docs/ASSIST_CONVERSATION.md), [phrase adapter](docs/CONVERSATION_ADAPTER.md), [voice aliases and default subject](docs/VOICE_OPTIONS.md) |
+| Experimental Google shortcuts | [Connection checklist](docs/GOOGLE_HOME_SETUP.md), [daily summary](docs/GOOGLE_DAILY_SUMMARY.md), [fixed entry](docs/GOOGLE_FIXED_ENTRY.md) |
+| Optional natural wording | [Gemini proof of concept](docs/GEMINI_ASSIST.md) — English request translation; not required for the standard agent |
+| API and validation | [API client](docs/API_CLIENT.md), [schema validation](docs/SCHEMA_VALIDATION.md), [calendar mapping](docs/CALENDAR_MAPPING.md) |
+
+See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) and
+[project board](https://github.com/users/MSpiechowicz/projects/4) for ongoing work.
+
+### Development
 
 Use **Python 3.14.2 or newer**. The minimum Home Assistant version is **2026.9.0**.
 The custom-component test harness pins Home Assistant and its testing dependencies
@@ -92,7 +228,7 @@ virtual environments, caches, build outputs, vendored/generated directories, and
 symlinks. JSON data, Markdown documentation, and other assets are not source files
 for this check. Use `python -m ruff format .` to format changed Python files.
 
-## Disposable-instance smoke test
+### Disposable-instance smoke test
 
 Add Track Things through Settings → Devices & services → Add integration.
 Choose the account connection option and sign in with Google, GitHub, or your
@@ -124,20 +260,7 @@ fresh environment. Its HTTP server is bound to loopback on port 18123. Track
 Things adds an account config flow and a read-only calendar for configured workspaces. The lifecycle tests
 cover authenticated config-entry setup/reload/unload.
 
-## Scope of the planned integration
-
-- Read the recorded-entry calendar, including multi-day entries.
-- Add entries using existing tracker schemas, with subject/detail clarification
-  and confirmation through English and Polish Home Assistant Assist pipelines.
-- Use one Track Things account/workspace per instance, including Google and GitHub SSO.
-- Offer Google Home fixed-script shortcuts and configured-speaker summaries.
-
-Google Home shortcuts do not forward arbitrary speech or follow-up replies into
-Assist. Full dialogue will use Assist. Backend authentication, date filtering,
-schema guards, and idempotency are prerequisite tickets; no backend changes are
-included in this scaffold.
-
-## Automatic versioning
+### Automatic versioning
 
 After both CI jobs pass on a push to `main`, the version job reads Conventional
 Commits since the highest reachable stable `vX.Y.Z` tag:
@@ -176,7 +299,7 @@ Repository/organization rules must permit the Actions token to push the version
 commit to `main` and create tags; this workflow does not bypass branch protection.
 No PyPI upload or GitHub Release publication is included.
 
-## Conversation drafts
+### Conversation drafts
 
 The pure draft state machine supports typed detail updates, isolated sessions,
 review, and explicit revision-bound confirmation. See
@@ -187,8 +310,3 @@ see [confirmed voice creation](docs/VOICE_CREATION.md).
 ## License
 
 GPL-3.0-only; see [LICENSE](LICENSE).
-
-Name-based recording and voice-adapter discovery are documented in the [name-based action guide](docs/NAME_BASED_ACTIONS.md).
-
-Configure [voice aliases and the default subject for “me”](docs/VOICE_OPTIONS.md)
-from the integration options.
