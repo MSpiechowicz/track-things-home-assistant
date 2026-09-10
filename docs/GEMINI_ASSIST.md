@@ -58,8 +58,13 @@ as saving authorization in this POC. Gemini cannot grant itself permission.
 ## Data and limitations
 
 Choosing this agent sends the utterance, current engine question/review, and
-selected tracker/subject/schema metadata to the configured Gemini service. These
-can include personal labels, field definitions, and review values. HA/Gemini may
+selected tracker/subject/schema metadata to the configured Gemini service.
+The catalog includes only active subjects assigned to the selected eligible
+trackers in the same workspace. It contains resource IDs/names, assignments,
+field labels/types, choices, required flags, numeric/length bounds, and visibility
+conditions. Arbitrary subject metadata, avatars, relationships, author IDs,
+schema defaults, UI settings, and unknown response fields are excluded.
+The request can still include personal labels, field definitions, and review values. HA/Gemini may
 retain conversation traces according to their settings. Use fictional data first;
 review Google's API terms before using sensitive tracking data.
 

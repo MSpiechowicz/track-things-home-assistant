@@ -3,6 +3,7 @@
 from zoneinfo import ZoneInfo
 
 import voluptuous as vol
+from homeassistant.auth.permissions.const import POLICY_CONTROL, POLICY_READ
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import (
     HomeAssistant,
@@ -19,6 +20,7 @@ from .const import DOMAIN
 from .create_entry import CREATE_SCHEMA, async_create_entry
 from .daily_calendar import async_daily_records
 from .named_actions import RECORD_SCHEMA, record_entry, recording_options
+from .service_permissions import async_check_access
 
 TARGET_SCHEMA = {vol.Required("config_entry_id"): cv.string}
 DAILY_SCHEMA = vol.Schema(
@@ -32,10 +34,11 @@ DAILY_SCHEMA = vol.Schema(
 )
 
 
-def _target(hass, call):
+async def _target(hass, call, permission):
     entry = hass.config_entries.async_get_entry(call.data["config_entry_id"])
     if entry is None or entry.domain != DOMAIN:
         raise ServiceValidationError("Unknown Track Things config entry")
+    await async_check_access(hass, call, entry, permission)
     if entry.state is not ConfigEntryState.LOADED:
         raise ServiceValidationError("Track Things config entry is not loaded")
     return entry
@@ -62,10 +65,10 @@ def async_register_services(hass: HomeAssistant) -> None:
     """Register once, including when there are no loaded account instances."""
 
     async def options(call: ServiceCall) -> ServiceResponse:
-        return await recording_options(_target(hass, call))
+        return await recording_options(await _target(hass, call, POLICY_READ))
 
     async def record(call: ServiceCall) -> ServiceResponse:
-        return await record_entry(hass, _target(hass, call), call.data)
+        return await record_entry(hass, await _target(hass, call, POLICY_CONTROL), call.data)
 
     hass.services.async_register(
         DOMAIN,
@@ -83,7 +86,7 @@ def async_register_services(hass: HomeAssistant) -> None:
     )
 
     async def create(call: ServiceCall) -> ServiceResponse:
-        return await async_create_entry(hass, _target(hass, call), call.data)
+        return await async_create_entry(hass, await _target(hass, call, POLICY_CONTROL), call.data)
 
     hass.services.async_register(
         DOMAIN,
@@ -94,7 +97,7 @@ def async_register_services(hass: HomeAssistant) -> None:
     )
 
     async def daily(call: ServiceCall) -> ServiceResponse:
-        entry = _target(hass, call)
+        entry = await _target(hass, call, POLICY_READ)
         day = call.data.get("date", dt_util.now(ZoneInfo(hass.config.time_zone)).date())
         records = await async_daily_records(
             hass, entry, day, call.data.get("trackerId"), call.data.get("subjectId")
@@ -109,7 +112,7 @@ def async_register_services(hass: HomeAssistant) -> None:
         }
 
     async def refresh(call: ServiceCall) -> ServiceResponse:
-        runtime = _target(hass, call).runtime_data
+        runtime = (await _target(hass, call, POLICY_CONTROL)).runtime_data
         runtime.calendar.invalidate()
         await runtime.coordinator.async_refresh()
         if not runtime.coordinator.last_update_success:

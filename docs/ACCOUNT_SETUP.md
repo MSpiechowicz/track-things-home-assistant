@@ -39,6 +39,15 @@ Assistant's config-entry storage. It does not retain passwords or identifiers
 in entry data, and does not log credentials. Protect Home Assistant's normal
 configuration storage and backups, which contain session credentials.
 
+Service actions check the calling Home Assistant user's permissions against the
+target instance's calendar entity, including after that entity is renamed.
+`get_daily_calendar` and `get_recording_options` require read permission;
+`create_entry`, `record_entry`, and `refresh` require control permission.
+Read-only users cannot record entries. Unknown or inactive users are rejected,
+and access to one instance does not grant access to another. Calls made by trusted
+automations without a user context remain supported. User-scoped service calls
+are rejected if the instance's calendar entity is absent from the entity registry.
+
 `entry.runtime_data` is the authenticated API client. Requests refresh at expiry
 (with a 30-second margin), or once after an HTTP 401. Concurrent refresh callers
 share a lock and check the session revision again. The rotated pair is submitted
