@@ -51,7 +51,7 @@ MESSAGES = {
 }
 
 
-def review_speech(result, metadata, language):
+def review_speech(result, metadata, language, time_zone=None):
     """Read validated IDs as labels; labels are data and never instructions."""
     payload = result.payload
     tracker = metadata.trackers[payload["trackerId"]]
@@ -75,6 +75,18 @@ def review_speech(result, metadata, language):
             )
         details.append(f"{definition['label']}: {value}")
     occurrence = payload.get("periodStart", payload["occurredAt"])
+    if time_zone and language == "en":
+        from datetime import date, datetime
+        from zoneinfo import ZoneInfo
+
+        if "periodStart" in payload:
+            occurrence = date.fromisoformat(occurrence[:10]).strftime("%B %d, %Y")
+        else:
+            occurrence = (
+                datetime.fromisoformat(occurrence)
+                .astimezone(ZoneInfo(time_zone))
+                .strftime("%B %d, %Y at %H:%M")
+            )
     return (
         f"{MESSAGES[language]['review']}: {tracker.get('name', tracker['id'])}; "
         f"{subject.get('name', subject['id'])}; {occurrence}; "

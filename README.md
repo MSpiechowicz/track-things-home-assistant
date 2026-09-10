@@ -18,6 +18,8 @@ A [Google Home fixed-entry shortcut](docs/GOOGLE_FIXED_ENTRY.md) records configu
 values with a stable request ID across its retry; real-device verification remains pending.
 An offline [guided-question adapter](docs/CONVERSATION_ADAPTER.md) supports English,
 Polish, German, and French, including explicit default-detail proposals.
+An opt-in [Gemini natural-wording POC](docs/GEMINI_ASSIST.md) translates English
+requests while keeping deterministic validation and literal confirmation.
 A selectable [Track Things Assist agent](docs/ASSIST_CONVERSATION.md) guides
 those drafts through questions, review and confirmed saving.
 [Calendar questions](docs/CALENDAR_CONVERSATION.md) support localized dates,

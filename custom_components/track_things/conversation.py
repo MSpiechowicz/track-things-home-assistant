@@ -45,7 +45,9 @@ class Session:
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    async_add_entities([TrackThingsConversation(entry)])
+    from .natural_conversation import NaturalConversation  # noqa: PLC0415
+
+    async_add_entities([TrackThingsConversation(entry), NaturalConversation(entry)])
 
 
 class TrackThingsConversation(ConversationEntity):
@@ -111,6 +113,9 @@ class TrackThingsConversation(ConversationEntity):
         Config entries own separate entity instances. A caller-supplied conversation
         ID alone never provides access to another user/device/satellite's draft.
         """
+        return await self._process(user_input)
+
+    async def _process(self, user_input, proposal=None):
         language = user_input.language.lower().replace("_", "-").split("-")[0]
         conversation_id = user_input.conversation_id or str(uuid4())
         key = (
@@ -132,13 +137,13 @@ class TrackThingsConversation(ConversationEntity):
                 speech, follow_up = MESSAGES[language]["unavailable"], False
             else:
                 speech, follow_up = await self._turn(
-                    key, user_input.text, language, confirmation_revision
+                    key, user_input.text, language, confirmation_revision, proposal
                 )
         response = intent.IntentResponse(language=user_input.language)
         response.async_set_speech(speech)
         return ConversationResult(response, conversation_id, follow_up)
 
-    async def _turn(self, key, text, language, confirmation_revision):
+    async def _turn(self, key, text, language, confirmation_revision, supplied_proposal=None):
         words = MESSAGES[language]
         session = self._sessions.get(key)
         try:
@@ -153,12 +158,16 @@ class TrackThingsConversation(ConversationEntity):
                     del self._sessions[key]
                     return VOICE_MESSAGES[language]["abandoned"], False
                 return VOICE_MESSAGES[language]["uncertain"], True
-            calendar_reply = await self.calendar.follow_up(key, text, language)
+            calendar_reply = (
+                await self.calendar.follow_up(key, text, language)
+                if supplied_proposal is None
+                else None
+            )
             if calendar_reply is not None:
                 return calendar_reply
             if not self.entry.runtime_data.coordinator.last_update_success:
                 return words["unavailable"], False
-            if session is None:
+            if session is None and supplied_proposal is None:
                 # Read-only queries must not depend on current write schemas.
                 context = AdapterContext(
                     DraftMetadata(self.entry.data["workspace_id"], {}, {}, {}),
@@ -208,7 +217,7 @@ class TrackThingsConversation(ConversationEntity):
                     self.hass.config.time_zone,
                     aliases=aliases,
                 )
-            proposal = self._adapters[language].parse(text, context)
+            proposal = supplied_proposal or self._adapters[language].parse(text, context)
             if not isinstance(proposal, Proposal) or not isinstance(proposal.patch, DraftPatch):
                 raise Clarification("invalid_proposal")
             if proposal.action == "calendar":
@@ -305,7 +314,12 @@ class TrackThingsConversation(ConversationEntity):
         if result.state == "review" or not result.descriptors:
             result = self.drafts.review(session.draft_id)
             session.reviewed_revision = result.revision
-            return review_speech(result, view.metadata, language)
+            return review_speech(
+                result,
+                view.metadata,
+                language,
+                self.hass.config.time_zone if getattr(self, "natural_review", False) else None,
+            )
         prompt = questions(result, view.metadata, language)[0].text
         definition = result.descriptors[0].definition
         if definition and definition["type"] in ("text", "textarea"):
