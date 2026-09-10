@@ -82,7 +82,9 @@
         "description": "Wybierz trackery do kalendarza. Aktywne trackery ręczne będą też dostępne do wpisów głosowych.",
         "data": {
           "tracker_ids": "Trackery",
-          "configure_voice": "Konfiguruj aliasy i domyślną osobę"
+          "configure_voice": "Konfiguruj aliasy i domyślną osobę",
+          "voice_workspace_entries": "Przestrzenie dostępne dla naturalnego asystenta głosowego",
+          "voice_preferred_workspace": "Preferowana przestrzeń przy niejednoznacznych poleceniach"
         }
       },
       "voice": {
@@ -107,7 +109,8 @@
       "invalid_subject": "Wybierz aktualną osobę lub „—”.",
       "invalid_reference": "Wybierz aktualny zasób lub usuń nieaktualne aliasy.",
       "invalid_alias": "Użyj do 30 aliasów, każdy do 100 znaków.",
-      "voice_unavailable": "Przywróć połączenie i spróbuj ponownie."
+      "voice_unavailable": "Przywróć połączenie i spróbuj ponownie.",
+      "invalid_workspace": "Wybierz połączone przestrzenie i preferowaną przestrzeń z tego wyboru."
     },
     "abort": {
       "not_loaded": "Najpierw przywróć połączenie integracji.",

@@ -82,7 +82,9 @@
         "description": "Choose calendar trackers. Active manual trackers will also be eligible for voice entries.",
         "data": {
           "tracker_ids": "Trackers",
-          "configure_voice": "Configure voice aliases and default subject"
+          "configure_voice": "Configure voice aliases and default subject",
+          "voice_workspace_entries": "Workspaces available to the natural voice agent",
+          "voice_preferred_workspace": "Preferred workspace for ambiguous requests"
         }
       },
       "voice": {
@@ -107,7 +109,8 @@
       "invalid_subject": "Choose a current subject or “—”.",
       "invalid_reference": "Choose a current resource or clear unavailable aliases.",
       "invalid_alias": "Use up to 30 aliases, each at most 100 characters.",
-      "voice_unavailable": "Restore connectivity and try again."
+      "voice_unavailable": "Restore connectivity and try again.",
+      "invalid_workspace": "Choose connected workspaces and a preference from that selection."
     },
     "abort": {
       "not_loaded": "Restore the integration connection first.",

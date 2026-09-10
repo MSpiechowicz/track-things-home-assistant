@@ -95,3 +95,43 @@ provider/metadata/proposal failure messages. The final offline suite passed
 
 These are bounded user-reported results, not a full live accuracy evaluation.
 Google Nest microphone routing remains unproven; this POC uses phone Assist.
+
+## Multiple workspaces, including shared workspaces
+
+Connect each workspace once through **Settings → Devices & services → Add
+integration → Track Things**, signing in with the same Track Things account and
+selecting a different accessible workspace. A workspace shared with your account
+can be connected this way; the owner does not need to give you their credentials.
+The sharing must grant permission to create entries for writes to succeed.
+
+Open **Configure** on the Track Things instance whose natural voice agent you
+use. Select **Workspaces available to the natural voice agent** and optionally a
+**Preferred workspace for ambiguous requests**. Only the current workspace is
+enabled by default. Select trackers in each workspace's own integration options.
+The setting is per agent instance, not per speaker or recognized family member.
+
+One phone Assist agent can then route requests across the enabled workspaces:
+
+- “Log Migraine” selects workspace A if that is its only eligible match.
+- “Log Poo” selects workspace B if that is its only eligible match.
+- “Log Migraine in Family” selects an explicitly named workspace.
+- If several workspaces match, a configured preference wins among those matches;
+  otherwise the assistant lists workspace names. Reply with one listed name.
+
+Gemini extracts names; deterministic code checks the connected account, enabled
+scope, tracker and subject eligibility before choosing. An explicit workspace
+never falls back to another workspace. Duplicate workspace names need distinct
+Home Assistant integration titles so the choice is unambiguous.
+
+Every draft response/review states the workspace. A draft stays in that workspace
+until completion or cancellation. Cancel before switching workspaces. Drafts and
+pending choices expire, remain scoped to the original HA conversation/user/device,
+and are cleared by restart. Removing a workspace from the scope or unloading its
+integration prevents continuing that draft; restore access or start fresh after
+checking any uncertain save. The backend remains authoritative for permissions.
+
+Enabling additional workspaces also sends their selected tracker/subject/schema
+metadata to the configured Gemini interpreter. Workspace routing does not create
+new trackers; it creates entries in existing trackers. A local phone Assist test
+confirmed that a request found its tracker in a second enabled workspace. This
+is a user-reported routing result; automated tests cover routing and isolation.
