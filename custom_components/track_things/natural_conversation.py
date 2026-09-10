@@ -15,6 +15,7 @@ from .api_errors import ApiError
 from .conversation import TrackThingsConversation
 from .conversation_contract import Clarification, Proposal
 from .conversation_responses import MESSAGES
+from .natural_catalog import interpreter_catalog
 from .natural_proposal import INSTRUCTIONS, control, decode_proposal
 from .workspace_routing import CONF_PREFERRED, WorkspaceChoice, connected, matches, unpack
 
@@ -204,20 +205,24 @@ class NaturalConversation(TrackThingsConversation):
                     if not current or entry_id == current
                 }
                 metadata = catalogs[current] if current else next(iter(catalogs.values()))
+                provider_catalogs = {
+                    key: interpreter_catalog(value) for key, value in catalogs.items()
+                }
+                single_catalog = (
+                    next(iter(provider_catalogs.values()))
+                    if len(provider_catalogs) == 1
+                    else {"trackers": {}, "subjects": {}, "schemas": {}}
+                )
                 catalog = {
                     "workspaces": [
                         {
                             "workspace_name": entries[k].title,
-                            "trackers": m.trackers,
-                            "subjects": m.subjects,
-                            "schemas": m.schemas,
+                            **provider_catalogs[k],
                         }
-                        for k, m in catalogs.items()
+                        for k in catalogs
                     ],
                     "active_workspace": entries[current].title if current else None,
-                    "trackers": metadata.trackers if len(catalogs) == 1 else {},
-                    "subjects": metadata.subjects if len(catalogs) == 1 else {},
-                    "schemas": metadata.schemas if len(catalogs) == 1 else {},
+                    **single_catalog,
                     "current_question": session.last_speech if session else None,
                     "utterance": user_input.text,
                     "now": dt_util.now().isoformat(),
